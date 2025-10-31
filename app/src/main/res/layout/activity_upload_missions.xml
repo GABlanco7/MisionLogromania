@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@drawable/gradient_background">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cargar Misiones Base"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:paddingBottom="16dp" />
+
+    <!-- Botón -->
+    <Button
+        android:id="@+id/btnUploadMissions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subir Misiones a Firestore"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@android:color/white" />
+
+    <!-- Texto de estado -->
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Esperando acción..."
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+</LinearLayout>

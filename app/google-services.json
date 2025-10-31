@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "916172015397",
+    "project_id": "mision-logromania-f7439",
+    "storage_bucket": "mision-logromania-f7439.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916172015397:android:b9b40edfc0cd8ad6ffbccc",
+        "android_client_info": {
+          "package_name": "com.german.misionlogromania"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc68terEvfrGqyc7NvXe6fvAyb8zFqLaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

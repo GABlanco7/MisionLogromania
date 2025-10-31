@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:fitsSystemWindows="true">
+
+    <!-- Fondo de estrellas y nubes -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/stars"
+            android:contentDescription="Fondo estrellado" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/clouds"
+            android:contentDescription="Fondo de nubes" />
+    </LinearLayout>
+
+    <!-- Contenido -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@android:color/transparent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:padding="24dp"
+                android:background="@android:color/transparent">
+
+                <!-- Botón volver -->
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="Volver"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Título -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crear cuenta"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/baloo_2"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Campo nombres -->
+                <EditText
+                    android:id="@+id/etFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nombres"
+                    android:inputType="textPersonName"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="#000000"
+                    android:fontFamily="@font/poppins" />
+
+                <!-- Campo apellidos -->
+                <EditText
+                    android:id="@+id/etLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Apellidos"
+                    android:inputType="textPersonName"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="#000000"
+                    android:fontFamily="@font/poppins" />
+
+                <!-- Campo correo -->
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Correo electrónico"
+                    android:inputType="textEmailAddress"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="#000000"
+                    android:fontFamily="@font/poppins" />
+
+                <!-- Campo contraseña -->
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="#000000"
+                    android:fontFamily="@font/poppins" />
+
+                <!-- Campo confirmar contraseña -->
+                <EditText
+                    android:id="@+id/etConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirmar contraseña"
+                    android:inputType="textPassword"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="#000000"
+                    android:fontFamily="@font/poppins" />
+
+                <!-- Mantener sesión iniciada -->
+                <CheckBox
+                    android:id="@+id/chkStayLoggedIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mantener sesión iniciada"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/poppins" />
+
+                <!-- Botón registrarse -->
+                <Button
+                    android:id="@+id/btnRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Registrarse"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:backgroundTint="#004aad"
+                    android:fontFamily="@font/merriweather"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+</FrameLayout>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:fitsSystemWindows="true">
+
+    <!-- Fondo dividido en dos mitades -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/transparent">
+
+        <!-- Mitad superior: estrellas -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/stars"
+            android:contentDescription="Fondo estrellado"
+            android:background="@android:color/transparent" />
+
+        <!-- Mitad inferior: nubes -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/clouds"
+            android:contentDescription="Fondo de nubes"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <!-- Botón volver -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@null"
+        android:src="@drawable/ic_back"
+        android:contentDescription="Volver"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Contenido principal -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TABLERO - OCTUBRE"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginTop="65dp"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="@font/baloo_2" />
+
+            <!-- Contenedor del tablero -->
+            <LinearLayout
+                android:id="@+id/boardContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/board_bg"
+                android:padding="12dp"
+                android:elevation="6dp"
+                android:layout_margin="8dp">
+
+                <!-- Encabezado de días -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="7">
+
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:text="L" android:textStyle="bold"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:text="M" android:textStyle="bold"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:text="M" android:textStyle="bold"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:text="J" android:textStyle="bold"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:text="V" android:textStyle="bold"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:text="S" android:textStyle="bold"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center" android:text="D" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <!-- FILAS DE DÍAS -->
+                <!-- Semana 1 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:weightSum="7" android:layout_marginTop="8dp">
+                    <ImageView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1"
+                        android:src="@drawable/star_glasses" android:scaleType="centerInside"/>
+                    <ImageView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1"
+                        android:src="@drawable/star_glasses" android:scaleType="centerInside"/>
+                    <ImageView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1"
+                        android:src="@drawable/star_glasses" android:scaleType="centerInside"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="4"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="5"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="6"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="7"/>
+                </LinearLayout>
+
+                <!-- Semana 2 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:weightSum="7" android:layout_marginTop="8dp">
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="8"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="9"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="10"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="11"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="12"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="13"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="14"/>
+                </LinearLayout>
+
+                <!-- Semana 3 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:weightSum="7" android:layout_marginTop="8dp">
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="15"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="16"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="17"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="18"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="19"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="20"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="21"/>
+                </LinearLayout>
+
+                <!-- Semana 4 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:weightSum="7" android:layout_marginTop="8dp">
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="22"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="23"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="24"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="25"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="26"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="27"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="28"/>
+                </LinearLayout>
+
+                <!-- Semana 5 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:weightSum="7" android:layout_marginTop="8dp">
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="29"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="30"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1" android:gravity="center" android:text="31"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1" />
+
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1"/>
+                    <TextView android:layout_width="0dp" android:layout_height="60dp" android:layout_weight="1"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

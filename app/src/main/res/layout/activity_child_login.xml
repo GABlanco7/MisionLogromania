@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:fitsSystemWindows="true">
+
+    <!-- Fondo dividido en dos mitades: estrellas y nubes -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/stars"
+            android:contentDescription="Fondo estrellado"
+            android:background="@android:color/transparent" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/clouds"
+            android:contentDescription="Fondo de nubes"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <!-- Contenido principal del login -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Botón volver -->
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Volver"
+                android:tint="#000000"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Título de sección -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inicio de sesión del niño"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginBottom="26dp"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:id="@+id/etFamilyCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Código familiar"
+                android:inputType="text"
+                android:layout_marginBottom="12dp" />
+
+            <EditText
+                android:id="@+id/etUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre de usuario"
+                android:inputType="text"
+                android:layout_marginBottom="12dp" />
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Checkbox de recordar sesión -->
+            <CheckBox
+                android:id="@+id/cbRememberSession"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recordar mi sesión"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Botón login -->
+            <Button
+                android:id="@+id/btnChildLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Iniciar sesión"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#004aad"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp" />
+
+            <!-- Cargando -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.german.misionlogromania">
+
+    <!-- 🔹 Permisos necesarios para FCM y notificaciones -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MisiónLogromanía"
+        tools:targetApi="33">
+
+        <!-- 🔹 Servicio de Firebase Messaging -->
+        <service
+            android:name=".notifications.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- 📌 BroadcastReceiver para manejar botones de notificación -->
+        <receiver android:name=".ui.board.NotificationActionReceiver" />
+
+        <!-- Pantalla principal / launcher -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MisiónLogromanía">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Pantalla del Padre -->
+        <activity
+            android:name=".ui.menu.PadreMenuActivity"
+            android:exported="false"
+            android:label="Panel del Padre"
+            android:parentActivityName=".ui.login.LoginActivity"
+            android:theme="@style/Theme.MisiónLogromanía">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.login.LoginActivity" />
+        </activity>
+
+        <!-- Pantalla de selección de roles -->
+        <activity
+            android:name=".ui.roles.RoleSelectionActivity"
+            android:exported="true"
+            android:label="Seleccionar Rol"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/Theme.MisiónLogromanía">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MainActivity" />
+        </activity>
+
+        <!-- Login del niño -->
+        <activity
+            android:name=".ui.login.ChildLoginActivity"
+            android:exported="true"
+            android:label="Login Niño"
+            android:parentActivityName=".ui.roles.RoleSelectionActivity"
+            android:theme="@style/Theme.MisiónLogromanía">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.roles.RoleSelectionActivity" />
+        </activity>
+
+        <!-- Login del padre -->
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true"
+            android:label="Login Padre"
+            android:parentActivityName=".ui.roles.RoleSelectionActivity"
+            android:theme="@style/Theme.MisiónLogromanía">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.roles.RoleSelectionActivity" />
+        </activity>
+
+        <!-- Registro de padres -->
+        <activity
+            android:name=".ui.register.RegisterActivity"
+            android:exported="false"
+            android:label="Registro"
+            android:parentActivityName=".ui.login.LoginActivity"
+            android:theme="@style/Theme.MisiónLogromanía">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.login.LoginActivity" />
+        </activity>
+
+        <!-- Contrato -->
+        <activity
+            android:name=".ui.contract.ContratoActivity"
+            android:exported="false"
+            android:label="Contrato"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <!-- Crear perfil del niño -->
+        <activity
+            android:name=".ui.profile.CreateChildProfileActivity"
+            android:exported="false"
+            android:label="Crear Perfil"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <!-- Selección de misiones -->
+        <activity
+            android:name=".ui.select.SelectMissionsActivity"
+            android:exported="true"
+            android:label="Seleccionar Misiones"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <!-- Confirmación de misiones -->
+        <activity
+            android:name=".ui.confirm.ConfirmMissionsActivity"
+            android:exported="true"
+            android:label="Confirmar Misiones"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <!-- ✅ Recuperar contraseña CON PARENT -->
+        <activity
+            android:name=".ui.login.RecoverPasswordActivity"
+            android:exported="false"
+            android:label="Recuperar Contraseña"
+            android:parentActivityName=".ui.login.LoginActivity"
+            android:theme="@style/Theme.MisiónLogromanía">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.login.LoginActivity" />
+        </activity>
+
+        <!-- Menú del niño -->
+        <activity
+            android:name=".ui.menu.KidHomeActivity"
+            android:exported="true"
+            android:label="Menú del Niño"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <!-- Subir recompensas -->
+        <activity
+            android:name=".ui.upload.UploadRewardsActivity"
+            android:exported="true"
+            android:label="Subir Recompensas"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <activity
+            android:name=".ui.upload.UploadMissionsActivity"
+            android:exported="true"
+            android:label="Subir Misiones"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <!-- Tablero de misiones del niño -->
+        <activity
+            android:name=".ui.board.MissionBoardActivity"
+            android:exported="false"
+            android:label="Tablero de Misiones"
+            android:theme="@style/Theme.MisiónLogromanía" />
+
+        <!-- FileProvider para compartir archivos -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

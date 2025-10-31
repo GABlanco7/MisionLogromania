@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dayContainer"
+    android:layout_width="56dp"
+    android:layout_height="56dp"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- 🌟 Fondo del día -->
+    <TextView
+        android:id="@+id/tvDay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="@drawable/bg_day_normal" />
+
+    <!-- 🌟 Estrella encima pero dejando visible el número -->
+    <ImageView
+        android:id="@+id/ivStar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/star_glasses"
+        android:scaleType="centerCrop"
+        android:alpha="0.6"
+        android:visibility="gone"
+        android:contentDescription="Día confirmado" />
+
+</FrameLayout>

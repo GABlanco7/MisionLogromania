@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Cabecera de días -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="7">
+
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center" android:text="L" android:textStyle="bold"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center" android:text="M" android:textStyle="bold"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center" android:text="M" android:textStyle="bold"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center" android:text="J" android:textStyle="bold"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center" android:text="V" android:textStyle="bold"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center" android:text="S" android:textStyle="bold"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:gravity="center" android:text="D" android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- Ejemplo fila -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="7"
+        android:layout_marginTop="4dp">
+
+        <ImageView android:layout_width="0dp" android:layout_height="40dp"
+            android:layout_weight="1" android:src="@drawable/star_glasses" android:scaleType="centerInside"/>
+        <TextView android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+            android:gravity="center" android:text="2"/>
+        <TextView android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+            android:gravity="center" android:text="3"/>
+        <TextView android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+            android:gravity="center" android:text="4"/>
+        <TextView android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+            android:gravity="center" android:text="5"/>
+        <TextView android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+            android:gravity="center" android:text="6"/>
+        <TextView android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1"
+            android:gravity="center" android:text="7"/>
+    </LinearLayout>
+</LinearLayout>
