@@ -56,7 +56,7 @@
                 android:tint="#000000"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Título de sección -->
+            <!-- Título -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,28 +67,13 @@
                 android:layout_marginBottom="26dp"
                 android:layout_gravity="center" />
 
+            <!-- Solo código familiar -->
             <EditText
                 android:id="@+id/etFamilyCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Código familiar"
                 android:inputType="text"
-                android:layout_marginBottom="12dp" />
-
-            <EditText
-                android:id="@+id/etUsername"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nombre de usuario"
-                android:inputType="text"
-                android:layout_marginBottom="12dp" />
-
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Contraseña"
-                android:inputType="textPassword"
                 android:layout_marginBottom="16dp" />
 
             <!-- Checkbox de recordar sesión -->

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.german.misionlogromania.R
 import com.german.misionlogromania.model.Mission
 import com.german.misionlogromania.ui.menu.PadreMenuActivity
+import com.german.misionlogromania.ui.select.SelectMissionsActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -20,15 +21,18 @@ class ConfirmMissionsActivity : AppCompatActivity() {
     private lateinit var missionsLayout: LinearLayout
     private lateinit var rewardsLayout: LinearLayout
     private lateinit var btnConfirmSelection: Button
+    private lateinit var btnCancel: Button
     private var childId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirm_missions)
 
+        // Referencias a vistas
         missionsLayout = findViewById(R.id.layoutMissions)
         rewardsLayout = findViewById(R.id.layoutRewards)
         btnConfirmSelection = findViewById(R.id.btnConfirmSelection)
+        btnCancel = findViewById(R.id.btnCancel)
 
         childId = intent.getStringExtra("childId") ?: ""
 
@@ -46,6 +50,7 @@ class ConfirmMissionsActivity : AppCompatActivity() {
             loadRewards()
         }
 
+        // Acción botón confirmar
         btnConfirmSelection.setOnClickListener {
             if (selectedMissions.isNullOrEmpty()) {
                 Toast.makeText(this, "No hay misiones para confirmar", Toast.LENGTH_SHORT).show()
@@ -53,6 +58,15 @@ class ConfirmMissionsActivity : AppCompatActivity() {
             }
 
             saveMissionsToFirestore(selectedMissions)
+        }
+
+        // Acción botón cancelar → volver a selección de misiones
+        btnCancel.setOnClickListener {
+            val intent = Intent(this, SelectMissionsActivity::class.java)
+            intent.putExtra("childId", childId)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -162,7 +176,7 @@ class ConfirmMissionsActivity : AppCompatActivity() {
         }
     }
 
-    /** 🔙 Regresar al menú del padre */
+    /** 🔙 Regresar al menú del padre (solo se usa al confirmar) */
     private fun goToParentMenu() {
         startActivity(Intent(this, PadreMenuActivity::class.java))
         finish()

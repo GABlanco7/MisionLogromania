@@ -80,20 +80,44 @@
                 android:orientation="vertical"
                 android:layout_marginBottom="32dp" />
 
-            <!-- Botón confirmar -->
-            <Button
-                android:id="@+id/btnConfirmSelection"
-                android:layout_width="wrap_content"
+            <!-- Contenedor horizontal para los botones -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Confirmar selección"
-                android:backgroundTint="#004aad"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:fontFamily="@font/merriweather"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp">
+
+                <!-- Botón Cancelar -->
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cancelar"
+                    android:backgroundTint="#B0B0B0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/merriweather"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- Botón Confirmar -->
+                <Button
+                    android:id="@+id/btnConfirmSelection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Confirmar"
+                    android:backgroundTint="#004aad"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/merriweather"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

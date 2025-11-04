@@ -17,6 +17,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class KidHomeActivity : AppCompatActivity() {
+
     private val db = Firebase.firestore
     private lateinit var avatarImageView: ImageView
     private lateinit var usernameTextView: TextView
@@ -28,7 +29,7 @@ class KidHomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kid_home)
 
-        // 🔹 Bind views
+        // 🔹 Referencias UI
         avatarImageView = findViewById(R.id.avatarImageView)
         usernameTextView = findViewById(R.id.usernameTextView)
         missionsRecyclerView = findViewById(R.id.missionsRecyclerView)
@@ -57,7 +58,7 @@ class KidHomeActivity : AppCompatActivity() {
         db.collection("children").document(childId).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    // 🔹 Mostrar username desde Firestore
+                    // 🔹 Mostrar nombre de usuario
                     val username = doc.getString("username") ?: "Niño"
                     usernameTextView.text = username
 
@@ -66,23 +67,31 @@ class KidHomeActivity : AppCompatActivity() {
                     val avatarResId = resources.getIdentifier(avatarName, "drawable", packageName)
                     avatarImageView.setImageResource(avatarResId)
 
-                    // 🔹 Cargar misiones
+                    // 🔹 Cargar misiones asignadas
                     @Suppress("UNCHECKED_CAST")
                     val missions = doc.get("assignedMissions") as? List<Map<String, Any>> ?: listOf()
-                    val missionTitles = if (missions.isEmpty()) {
-                        listOf("Sin misiones por ahora")
-                    } else {
-                        missions.map { it["title"].toString() }
-                    }
 
                     missionsRecyclerView.layoutManager = LinearLayoutManager(this)
                     missionsRecyclerView.adapter = MissionsAdapter(missions) { mission ->
                         val missionTitle = mission["title"].toString()
                         val missionId = mission["id"].toString()
 
+                        // ✅ Recuperar datos del niño desde preferencias
+                        val prefs = getSharedPreferences("child_prefs", MODE_PRIVATE)
+                        val childIdPref = prefs.getString("childId", null)
+                        val childNamePref = prefs.getString("childName", username)
+
+                        if (childIdPref == null) {
+                            Toast.makeText(this, "Error: ID del niño no encontrado", Toast.LENGTH_SHORT).show()
+                            return@MissionsAdapter
+                        }
+
+                        // ✅ Enviar datos al tablero de misiones
                         val intent = Intent(this, MissionBoardActivity::class.java)
                         intent.putExtra("missionTitle", missionTitle)
                         intent.putExtra("missionId", missionId)
+                        intent.putExtra("childId", childIdPref)
+                        intent.putExtra("childName", childNamePref)
                         startActivity(intent)
                     }
 
@@ -102,7 +111,7 @@ class KidHomeActivity : AppCompatActivity() {
             }
     }
 
-    // 🔹 Adaptador de misiones con click, manteniendo diseño original
+    // 🔹 Adaptador de misiones con clic
     class MissionsAdapter(
         private val missions: List<Map<String, Any>>,
         private val onMissionClick: (Map<String, Any>) -> Unit
