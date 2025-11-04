@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.german.misionlogromania.R
 import com.german.misionlogromania.ui.board.MissionBoardActivity
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -67,7 +68,7 @@ class PadreMenuActivity : AppCompatActivity() {
                     val familyCode = childDoc.getString("familyCode") ?: "---"
                     tvFamilyCode.text = "Código familiar: $familyCode"
 
-                    // --- Mostrar misiones agrupadas ---
+                    // --- Mostrar misiones ---
                     @Suppress("UNCHECKED_CAST")
                     val missions = childDoc.get("assignedMissions") as? List<Map<String, Any>> ?: listOf()
                     if (missions.isNotEmpty()) {
@@ -79,7 +80,7 @@ class PadreMenuActivity : AppCompatActivity() {
                         Toast.makeText(this, "$childName aún no tiene misiones asignadas", Toast.LENGTH_SHORT).show()
                     }
 
-                    // --- Mostrar notificaciones internas ---
+                    // --- Mostrar notificaciones ---
                     @Suppress("UNCHECKED_CAST")
                     val notifications = childDoc.get("notifications") as? List<Map<String, Any>> ?: listOf()
                     overlayContainer.removeAllViews()
@@ -191,8 +192,10 @@ class PadreMenuActivity : AppCompatActivity() {
             }
     }
 
-    /** 🟢 Aceptar notificación → confirmar misión en Firestore */
+    /** 🟢 Aceptar notificación → confirmar misión y sumar estrella */
     private fun aceptarNotificacion(childId: String, missionId: String) {
+        val childRef = db.collection("children").document(childId)
+
         db.collection("missionConfirmations")
             .whereEqualTo("childId", childId)
             .whereEqualTo("missionId", missionId)
@@ -201,7 +204,14 @@ class PadreMenuActivity : AppCompatActivity() {
                 for (doc in docs) {
                     doc.reference.update("confirmedByParent", true)
                 }
-                Toast.makeText(this, "✅ Misión aceptada correctamente", Toast.LENGTH_SHORT).show()
+                // Sumar estrella al niño
+                childRef.update("stars", FieldValue.increment(1))
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "✅ Misión aceptada y estrella sumada", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Error al sumar estrella: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
     }
 

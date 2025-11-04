@@ -36,7 +36,6 @@ class MissionBoardActivity : AppCompatActivity() {
     private var childId: String? = null
     private lateinit var adapter: DayAdapter
 
-    // Calendario y confirmaciones independientes para cada misión
     private var currentMonth = 0
     private var currentYear = 0
     private val confirmedDays = mutableMapOf<Pair<Int, Int>, List<Int>>()
@@ -68,11 +67,9 @@ class MissionBoardActivity : AppCompatActivity() {
         val missionId = intent.getStringExtra("missionId")
 
         if (!missionTitle.isNullOrBlank() && !missionId.isNullOrBlank()) {
-            // ✅ Modo misión única (desde KidHome)
             currentMission = Mission(missionTitle, missionId)
             container.addView(createMissionBoard(currentMission!!))
         } else {
-            // 🔄 Modo general (si se abre sin parámetros)
             loadAllMissions()
         }
 
@@ -84,7 +81,6 @@ class MissionBoardActivity : AppCompatActivity() {
         btnNextMonth.setOnClickListener { changeMonth(1) }
     }
 
-    /** 🔹 Cargar todas las misiones asignadas al niño */
     private fun loadAllMissions() {
         db.collection("children").document(childId!!).get()
             .addOnSuccessListener { doc ->
@@ -104,26 +100,18 @@ class MissionBoardActivity : AppCompatActivity() {
             }
     }
 
-    /** 🔹 Crear tablero para una misión específica */
     private fun createMissionBoard(mission: Mission) =
         layoutInflater.inflate(R.layout.layout_single_board, container, false).apply {
             findViewById<TextView>(R.id.tvBoardTitle).text = mission.title
-
-            // Calendario independiente por misión
-            val now = Calendar.getInstance()
-            currentMonth = now.get(Calendar.MONTH)
-            currentYear = now.get(Calendar.YEAR)
             currentMission = mission
-
             loadConfirmedDays(mission) { showMonth(currentYear, currentMonth) }
         }
 
-    /** 🔹 Cargar días confirmados de Firestore */
     private fun loadConfirmedDays(mission: Mission, onFinish: () -> Unit) {
         db.collection("missionConfirmations")
             .whereEqualTo("childId", childId)
             .whereEqualTo("missionId", mission.id)
-            .whereEqualTo("confirmedByParent", true)
+            .whereEqualTo("confirmedByParent", true) // Solo días aprobados
             .get()
             .addOnSuccessListener { docs ->
                 confirmedDays.clear()
@@ -143,7 +131,6 @@ class MissionBoardActivity : AppCompatActivity() {
             }
     }
 
-    /** 🔹 Mostrar calendario del mes */
     private fun showMonth(year: Int, month: Int) {
         val monthName = DateFormatSymbols().months[month].replaceFirstChar { it.uppercase() }
         tvMonth.text = "$monthName $year"
@@ -198,7 +185,7 @@ class MissionBoardActivity : AppCompatActivity() {
         return days
     }
 
-    /** ✅ Enviar confirmación */
+    /** ✅ Enviar confirmación al padre (NO SUMAR ESTRELLAS aquí) */
     private fun sendMissionConfirmationToParent(day: Day) {
         val mission = currentMission ?: return
         val fecha = "${day.dayNumber} de ${DateFormatSymbols().months[currentMonth]} de $currentYear"
@@ -207,7 +194,7 @@ class MissionBoardActivity : AppCompatActivity() {
             "childId" to childId,
             "missionId" to mission.id,
             "day" to day.dayNumber,
-            "confirmedByParent" to false,
+            "confirmedByParent" to false, // Empieza en false
             "timestamp" to Calendar.getInstance().time,
             "missionName" to mission.title
         )
@@ -224,7 +211,6 @@ class MissionBoardActivity : AppCompatActivity() {
             }
     }
 
-    /** 🟡 Guardar notificación para el padre */
     private fun addNotificationForParent(mission: Mission, message: String) {
         db.collection("children").document(childId!!).get()
             .addOnSuccessListener { doc ->
@@ -238,8 +224,7 @@ class MissionBoardActivity : AppCompatActivity() {
                     )
 
                     val currentNotifications =
-                        (doc.get("notifications") as? MutableList<Map<String, Any>>
-                            ?: mutableListOf()).toMutableList()
+                        (doc.get("notifications") as? MutableList<Map<String, Any>> ?: mutableListOf()).toMutableList()
 
                     val existingIndex = currentNotifications.indexOfFirst { it["missionId"] == mission.id }
                     if (existingIndex >= 0) currentNotifications[existingIndex] = newNotification

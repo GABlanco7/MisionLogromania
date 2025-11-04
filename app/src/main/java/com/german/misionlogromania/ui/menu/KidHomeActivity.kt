@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +24,8 @@ class KidHomeActivity : AppCompatActivity() {
     private lateinit var missionsRecyclerView: RecyclerView
     private lateinit var starsTitleTextView: TextView
     private lateinit var starsCountTextView: TextView
+
+    private var childId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,28 +48,27 @@ class KidHomeActivity : AppCompatActivity() {
             return
         }
 
-        val childId = prefs.getString("childId", null)
+        childId = prefs.getString("childId", null)
         if (childId != null) {
-            loadChildProfile(childId)
+            loadChildProfile(childId!!)
+            listenStars(childId!!)  // 🔹 Actualización en tiempo real
         } else {
             Toast.makeText(this, "Error: ID del niño no encontrado", Toast.LENGTH_SHORT).show()
         }
     }
 
+    /** 🔹 Cargar perfil del niño */
     private fun loadChildProfile(childId: String) {
         db.collection("children").document(childId).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    // 🔹 Mostrar nombre de usuario
                     val username = doc.getString("username") ?: "Niño"
                     usernameTextView.text = username
 
-                    // 🔹 Cargar avatar
                     val avatarName = doc.getString("avatar") ?: "avatar3"
                     val avatarResId = resources.getIdentifier(avatarName, "drawable", packageName)
                     avatarImageView.setImageResource(avatarResId)
 
-                    // 🔹 Cargar misiones asignadas
                     @Suppress("UNCHECKED_CAST")
                     val missions = doc.get("assignedMissions") as? List<Map<String, Any>> ?: listOf()
 
@@ -75,22 +76,12 @@ class KidHomeActivity : AppCompatActivity() {
                     missionsRecyclerView.adapter = MissionsAdapter(missions) { mission ->
                         val missionTitle = mission["title"].toString()
                         val missionId = mission["id"].toString()
+                        val childNamePref = doc.getString("username") ?: "Niño"
 
-                        // ✅ Recuperar datos del niño desde preferencias
-                        val prefs = getSharedPreferences("child_prefs", MODE_PRIVATE)
-                        val childIdPref = prefs.getString("childId", null)
-                        val childNamePref = prefs.getString("childName", username)
-
-                        if (childIdPref == null) {
-                            Toast.makeText(this, "Error: ID del niño no encontrado", Toast.LENGTH_SHORT).show()
-                            return@MissionsAdapter
-                        }
-
-                        // ✅ Enviar datos al tablero de misiones
                         val intent = Intent(this, MissionBoardActivity::class.java)
                         intent.putExtra("missionTitle", missionTitle)
                         intent.putExtra("missionId", missionId)
-                        intent.putExtra("childId", childIdPref)
+                        intent.putExtra("childId", childId)
                         intent.putExtra("childName", childNamePref)
                         startActivity(intent)
                     }
@@ -99,7 +90,7 @@ class KidHomeActivity : AppCompatActivity() {
                         Toast.makeText(this, "No tienes misiones asignadas todavía", Toast.LENGTH_SHORT).show()
                     }
 
-                    // 🔹 Mostrar estrellas acumuladas
+                    // 🔹 Mostrar estrellas iniciales
                     val stars = doc.getLong("stars") ?: 0L
                     starsCountTextView.text = stars.toString()
                 } else {
@@ -111,7 +102,19 @@ class KidHomeActivity : AppCompatActivity() {
             }
     }
 
-    // 🔹 Adaptador de misiones con clic
+    /** 🔹 Escuchar cambios en las estrellas en tiempo real */
+    private fun listenStars(childId: String) {
+        db.collection("children").document(childId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) return@addSnapshotListener
+                if (snapshot != null && snapshot.exists()) {
+                    val stars = snapshot.getLong("stars") ?: 0L
+                    starsCountTextView.text = stars.toString()
+                }
+            }
+    }
+
+    // 🔹 Adaptador de misiones
     class MissionsAdapter(
         private val missions: List<Map<String, Any>>,
         private val onMissionClick: (Map<String, Any>) -> Unit
@@ -119,8 +122,7 @@ class KidHomeActivity : AppCompatActivity() {
 
         inner class MissionViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView) {
             fun bind(mission: Map<String, Any>) {
-                val title = mission["title"].toString()
-                textView.text = title
+                textView.text = mission["title"].toString()
                 textView.setOnClickListener { onMissionClick(mission) }
             }
         }
