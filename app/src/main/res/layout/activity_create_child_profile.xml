@@ -148,22 +148,6 @@
                 android:inputType="text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
-
-            <EditText
-                android:id="@+id/etPassword"
-                android:hint="Contraseña"
-                android:inputType="textPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
-
-            <EditText
-                android:id="@+id/etConfirmPassword"
-                android:hint="Confirmar contraseña"
-                android:inputType="textPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp" />
 
             <!-- Botón guardar -->

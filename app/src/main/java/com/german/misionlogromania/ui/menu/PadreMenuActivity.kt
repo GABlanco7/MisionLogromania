@@ -39,11 +39,15 @@ class PadreMenuActivity : AppCompatActivity() {
         tvFamilyCode = findViewById(R.id.tvFamilyCode)
         overlayContainer = findViewById(R.id.overlayContent)
 
+        // 🔹 La campanita siempre visible
+        ivNotification.visibility = View.VISIBLE
         ivNotification.setOnClickListener { overlayNotificaciones.visibility = View.VISIBLE }
+
         btnAceptar.setOnClickListener {
             overlayNotificaciones.visibility = View.GONE
             markNotificationsAsRead()
         }
+
         overlayNotificaciones.setOnClickListener { overlayNotificaciones.visibility = View.GONE }
 
         listenChildUpdates()
@@ -71,24 +75,24 @@ class PadreMenuActivity : AppCompatActivity() {
                     // --- Mostrar misiones ---
                     @Suppress("UNCHECKED_CAST")
                     val missions = childDoc.get("assignedMissions") as? List<Map<String, Any>> ?: listOf()
-                    if (missions.isNotEmpty()) {
-                        mostrarMisiones(missions)
-                        ivNotification.visibility = View.VISIBLE
-                    } else {
-                        contenedorMisiones.removeAllViews()
-                        ivNotification.visibility = View.GONE
-                        Toast.makeText(this, "$childName aún no tiene misiones asignadas", Toast.LENGTH_SHORT).show()
-                    }
+                    if (missions.isNotEmpty()) mostrarMisiones(missions)
 
-                    // --- Mostrar notificaciones ---
+                    // --- Mostrar notificaciones filtradas ---
                     @Suppress("UNCHECKED_CAST")
                     val notifications = childDoc.get("notifications") as? List<Map<String, Any>> ?: listOf()
                     overlayContainer.removeAllViews()
 
-                    val unseenNotifications = notifications.filter { !(it["seen"] as? Boolean ?: false) }
+                    val unseenNotifications = notifications.filter {
+                        !(it["seen"] as? Boolean ?: false) &&
+                                ((it["type"] as? String) == "mission_completed" ||
+                                        (it["type"] as? String) == "reward_redeemed")
+                    }
+
+                    // 🔹 La campanita siempre visible, pero se puede destacar si hay notificaciones
+                    ivNotification.alpha = if (unseenNotifications.isNotEmpty()) 1f else 0.6f
 
                     for (notif in unseenNotifications) {
-                        val missionId = notif["missionId"] as? String ?: continue
+                        val missionId = notif["missionId"] as? String ?: ""
                         val title = notif["title"] as? String ?: ""
                         val message = notif["message"] as? String ?: ""
 
@@ -134,7 +138,6 @@ class PadreMenuActivity : AppCompatActivity() {
                             setTextColor(Color.WHITE)
                             textSize = 16f
                             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginEnd = 8 }
-
                             setOnClickListener {
                                 aceptarNotificacion(childDoc.id, missionId)
                                 markNotificationAsRead(childDoc.id, missionId)
@@ -148,7 +151,6 @@ class PadreMenuActivity : AppCompatActivity() {
                             setTextColor(Color.WHITE)
                             textSize = 16f
                             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = 8 }
-
                             setOnClickListener {
                                 rechazarNotificacion(childDoc.id, missionId)
                                 markNotificationAsRead(childDoc.id, missionId)
@@ -164,11 +166,9 @@ class PadreMenuActivity : AppCompatActivity() {
 
                         overlayContainer.addView(notifLayout)
                     }
-
                 } else {
                     contenedorMisiones.removeAllViews()
                     overlayContainer.removeAllViews()
-                    ivNotification.visibility = View.GONE
                     Toast.makeText(this, "No se encontró perfil del niño", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -177,7 +177,6 @@ class PadreMenuActivity : AppCompatActivity() {
     /** ✅ Marcar todas las notificaciones como leídas */
     private fun markNotificationsAsRead() {
         val parentId = auth.currentUser?.uid ?: return
-
         db.collection("children")
             .whereEqualTo("parentId", parentId)
             .limit(1)
@@ -195,23 +194,13 @@ class PadreMenuActivity : AppCompatActivity() {
     /** 🟢 Aceptar notificación → confirmar misión y sumar estrella */
     private fun aceptarNotificacion(childId: String, missionId: String) {
         val childRef = db.collection("children").document(childId)
-
         db.collection("missionConfirmations")
             .whereEqualTo("childId", childId)
             .whereEqualTo("missionId", missionId)
             .get()
             .addOnSuccessListener { docs ->
-                for (doc in docs) {
-                    doc.reference.update("confirmedByParent", true)
-                }
-                // Sumar estrella al niño
+                for (doc in docs) doc.reference.update("confirmedByParent", true)
                 childRef.update("stars", FieldValue.increment(1))
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "✅ Misión aceptada y estrella sumada", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Error al sumar estrella: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
             }
     }
 
@@ -222,10 +211,7 @@ class PadreMenuActivity : AppCompatActivity() {
             .whereEqualTo("missionId", missionId)
             .get()
             .addOnSuccessListener { docs ->
-                for (doc in docs) {
-                    doc.reference.update("rejected", true)
-                }
-                Toast.makeText(this, "❌ Misión rechazada", Toast.LENGTH_SHORT).show()
+                for (doc in docs) doc.reference.update("rejected", true)
             }
     }
 
@@ -244,7 +230,6 @@ class PadreMenuActivity : AppCompatActivity() {
     /** 🎯 Mostrar misiones agrupadas por categoría */
     private fun mostrarMisiones(missions: List<Map<String, Any>>) {
         contenedorMisiones.removeAllViews()
-
         val missionsByCategory = missions.groupBy { it["category"] as? String ?: "General" }
 
         for ((category, missionsInCategory) in missionsByCategory) {

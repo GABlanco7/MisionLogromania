@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +16,7 @@ import com.german.misionlogromania.ui.login.ChildLoginActivity
 import com.german.misionlogromania.ui.board.MissionBoardActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.german.misionlogromania.ui.rewards.RedeemRewardActivity
 
 class KidHomeActivity : AppCompatActivity() {
 
@@ -24,6 +26,7 @@ class KidHomeActivity : AppCompatActivity() {
     private lateinit var missionsRecyclerView: RecyclerView
     private lateinit var starsTitleTextView: TextView
     private lateinit var starsCountTextView: TextView
+    private lateinit var btnRedeemReward: Button   // <-- Botón añadido
 
     private var childId: String? = null
 
@@ -37,6 +40,18 @@ class KidHomeActivity : AppCompatActivity() {
         missionsRecyclerView = findViewById(R.id.missionsRecyclerView)
         starsTitleTextView = findViewById(R.id.tvStarsTitle)
         starsCountTextView = findViewById(R.id.tvStarsCount)
+        btnRedeemReward = findViewById(R.id.btnRedeemReward) // <-- Inicialización
+
+        // 🔹 Configurar botón de canje
+        btnRedeemReward.setOnClickListener {
+            if (childId != null) {
+                val intent = Intent(this, RedeemRewardActivity::class.java)
+                intent.putExtra("childId", childId)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "ID del niño no encontrado", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         // 🔹 Verificar sesión del niño
         val prefs = getSharedPreferences("child_prefs", MODE_PRIVATE)

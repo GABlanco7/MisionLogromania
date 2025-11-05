@@ -3,6 +3,7 @@ package com.german.misionlogromania.ui.confirm
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -23,6 +24,7 @@ class ConfirmMissionsActivity : AppCompatActivity() {
     private lateinit var btnConfirmSelection: Button
     private lateinit var btnCancel: Button
     private var childId = ""
+    private val TAG = "ConfirmMissionsActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,9 +85,11 @@ class ConfirmMissionsActivity : AppCompatActivity() {
         }
     }
 
-    /** 🏆 Cargar recompensas */
+    /** 🏆 Cargar recompensas agrupadas por nivel/dificultad */
     private fun loadRewards() {
+        Log.d(TAG, "Cargando recompensas desde Firestore...")
         rewardsLayout.removeAllViews()
+
         db.collection("rewards")
             .get()
             .addOnSuccessListener { docs ->
@@ -99,20 +103,72 @@ class ConfirmMissionsActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
 
+                // Agrupar recompensas por nivel
+                val rewardsByLevel = mutableMapOf<String, MutableList<RewardData>>()
+
                 docs.forEach { doc ->
                     val title = doc.getString("title") ?: "Recompensa sin nombre"
                     val description = doc.getString("description") ?: ""
                     val points = doc.getLong("points") ?: 0L
+                    val level = doc.getString("level") ?: "medio"
 
-                    val tv = TextView(this).apply {
-                        text = "🏆 $title\n$description\nPuntos: $points"
-                        textSize = 16f
-                        setPadding(16, 8, 16, 8)
+                    // Normalizar el nivel
+                    val normalizedLevel = when (level.trim().lowercase()) {
+                        "facil", "fácil" -> "Fácil"
+                        "medio" -> "Medio"
+                        "avanzado", "dificil", "difícil" -> "Avanzado"
+                        else -> level.trim().replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase() else it.toString()
+                        }
                     }
-                    rewardsLayout.addView(tv)
+
+                    if (!rewardsByLevel.containsKey(normalizedLevel)) {
+                        rewardsByLevel[normalizedLevel] = mutableListOf()
+                    }
+
+                    rewardsByLevel[normalizedLevel]?.add(
+                        RewardData(title, description, points, normalizedLevel)
+                    )
+                }
+
+                Log.d(TAG, "Niveles encontrados: ${rewardsByLevel.keys}")
+
+                // Ordenar niveles
+                val levelOrder = listOf("Fácil", "Medio", "Avanzado")
+                val sortedLevels = rewardsByLevel.keys.sortedBy { level ->
+                    levelOrder.indexOf(level).takeIf { it >= 0 } ?: 999
+                }
+
+                // Mostrar recompensas por nivel
+                sortedLevels.forEach { level ->
+                    val rewards = rewardsByLevel[level] ?: return@forEach
+
+                    // Título del nivel
+                    val levelTitle = TextView(this).apply {
+                        text = "🌟 $level"
+                        textSize = 20f
+                        setTextColor(resources.getColor(android.R.color.holo_orange_dark, null))
+                        setPadding(16, 24, 16, 8)
+                        setTypeface(null, android.graphics.Typeface.BOLD)
+                    }
+                    rewardsLayout.addView(levelTitle)
+
+                    // Recompensas del nivel
+                    rewards.forEach { reward ->
+                        val tv = TextView(this).apply {
+                            text = "🏆 ${reward.title}\n" +
+                                    if (reward.description.isNotEmpty()) "${reward.description}\n" else "" +
+                                            "Puntos: ${reward.points} ⭐"
+                            textSize = 16f
+                            setPadding(32, 8, 16, 8)
+                            setLineSpacing(4f, 1f)
+                        }
+                        rewardsLayout.addView(tv)
+                    }
                 }
             }
             .addOnFailureListener { e ->
+                Log.e(TAG, "Error al cargar recompensas: ${e.message}", e)
                 Toast.makeText(this, "Error al cargar recompensas: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
@@ -181,4 +237,12 @@ class ConfirmMissionsActivity : AppCompatActivity() {
         startActivity(Intent(this, PadreMenuActivity::class.java))
         finish()
     }
+
+    /** 📦 Clase de datos simple para recompensas */
+    private data class RewardData(
+        val title: String,
+        val description: String,
+        val points: Long,
+        val level: String
+    )
 }

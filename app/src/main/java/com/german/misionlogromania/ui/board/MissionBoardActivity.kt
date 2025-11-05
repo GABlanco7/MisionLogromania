@@ -111,7 +111,7 @@ class MissionBoardActivity : AppCompatActivity() {
         db.collection("missionConfirmations")
             .whereEqualTo("childId", childId)
             .whereEqualTo("missionId", mission.id)
-            .whereEqualTo("confirmedByParent", true) // Solo días aprobados
+            .whereEqualTo("confirmedByParent", true)
             .get()
             .addOnSuccessListener { docs ->
                 confirmedDays.clear()
@@ -185,7 +185,7 @@ class MissionBoardActivity : AppCompatActivity() {
         return days
     }
 
-    /** ✅ Enviar confirmación al padre (NO SUMAR ESTRELLAS aquí) */
+    /** ✅ Enviar confirmación al padre */
     private fun sendMissionConfirmationToParent(day: Day) {
         val mission = currentMission ?: return
         val fecha = "${day.dayNumber} de ${DateFormatSymbols().months[currentMonth]} de $currentYear"
@@ -194,7 +194,7 @@ class MissionBoardActivity : AppCompatActivity() {
             "childId" to childId,
             "missionId" to mission.id,
             "day" to day.dayNumber,
-            "confirmedByParent" to false, // Empieza en false
+            "confirmedByParent" to false,
             "timestamp" to Calendar.getInstance().time,
             "missionName" to mission.title
         )
@@ -211,8 +211,11 @@ class MissionBoardActivity : AppCompatActivity() {
             }
     }
 
+    /** 🔔 Guardar notificación de misión completada para el padre */
     private fun addNotificationForParent(mission: Mission, message: String) {
-        db.collection("children").document(childId!!).get()
+        val childIdSafe = childId ?: return
+
+        db.collection("children").document(childIdSafe).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
                     val newNotification = mapOf(
@@ -220,7 +223,8 @@ class MissionBoardActivity : AppCompatActivity() {
                         "title" to "Misión completada",
                         "message" to message,
                         "timestamp" to System.currentTimeMillis(),
-                        "seen" to false
+                        "seen" to false,
+                        "type" to "mission_completed" // <- clave para filtrar
                     )
 
                     val currentNotifications =

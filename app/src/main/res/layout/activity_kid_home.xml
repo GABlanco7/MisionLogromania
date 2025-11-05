@@ -37,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:text="Nombre del niño"
                 android:textSize="26sp"
-                android:textColor="#000000"
                 android:textStyle="bold"
+                android:textColor="#000000"
                 android:fontFamily="@font/baloo_2" />
         </LinearLayout>
 
@@ -70,7 +70,7 @@
             android:orientation="vertical"
             android:gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/tvStarsTitle"
@@ -93,5 +93,18 @@
                 android:textColor="#FFD700"
                 android:fontFamily="@font/poppins" />
         </LinearLayout>
+
+        <!-- Botón Canjear Recompensa -->
+        <Button
+            android:id="@+id/btnRedeemReward"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Canjear Recompensa"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins"/>
     </LinearLayout>
 </ScrollView>

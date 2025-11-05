@@ -69,7 +69,6 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_notification"
-                    android:tint="@color/gold"
                     android:contentDescription="Notificación"
                     android:clickable="true"
                     android:focusable="true" />
@@ -139,7 +138,8 @@
             <!-- 🔹 Contenedor dinámico con scroll -->
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="300dp"
                 android:overScrollMode="never">
 
                 <LinearLayout
@@ -150,7 +150,7 @@
                     android:padding="4dp" />
             </ScrollView>
 
-            <!-- 🔘 Botón ACEPTAR -->
+            <!-- 🔘 Botón ACEPTAR general -->
             <Button
                 android:id="@+id/btnAceptar"
                 android:layout_width="wrap_content"

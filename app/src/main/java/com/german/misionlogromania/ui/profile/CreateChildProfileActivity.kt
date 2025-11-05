@@ -10,7 +10,6 @@ import com.german.misionlogromania.ui.select.SelectMissionsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.security.MessageDigest
 
 class CreateChildProfileActivity : AppCompatActivity() {
 
@@ -19,7 +18,6 @@ class CreateChildProfileActivity : AppCompatActivity() {
     private var selectedAvatar = "avatar1"
     private var familyCode: String = ""
     private lateinit var parentId: String
-    private val useHash = false // Cambiar a true si deseas guardar contraseñas hasheadas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +30,6 @@ class CreateChildProfileActivity : AppCompatActivity() {
         val etLastName = findViewById<EditText>(R.id.etLastName)
         val etAge = findViewById<EditText>(R.id.etAge)
         val etUsername = findViewById<EditText>(R.id.etUsername)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
         val btnSave = findViewById<Button>(R.id.btnSave)
         val imgSelectedAvatar = findViewById<ImageView>(R.id.imgSelectedAvatar)
         val btnExpandAvatars = findViewById<ImageView>(R.id.btnExpandAvatars)
@@ -100,19 +96,16 @@ class CreateChildProfileActivity : AppCompatActivity() {
             val lastName = etLastName.text.toString().trim()
             val ageStr = etAge.text.toString().trim()
             val username = etUsername.text.toString().trim()
-            val password = etPassword.text.toString()
-            val confirmPassword = etConfirmPassword.text.toString()
 
             // Validaciones
-            if (firstName.isEmpty() || lastName.isEmpty() || ageStr.isEmpty() ||
-                username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()
-            ) {
+            if (firstName.isEmpty() || lastName.isEmpty() || ageStr.isEmpty() || username.isEmpty()) {
                 Toast.makeText(this, "Complete todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (password != confirmPassword) {
-                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+            val age = ageStr.toIntOrNull()
+            if (age == null || age !in 4..11) {
+                Toast.makeText(this, "La edad debe estar entre 4 y 11 años", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -121,22 +114,16 @@ class CreateChildProfileActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val age = ageStr.toIntOrNull()
-            if (age == null || age <= 0) {
-                Toast.makeText(this, "Ingrese una edad válida", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // 🔹 Verificar duplicado de username dentro del mismo familyCode
+            // Verificar duplicado de username dentro del mismo familyCode
             db.collection("users")
                 .whereEqualTo("familyCode", familyCode)
                 .whereEqualTo("username", username)
                 .get()
                 .addOnSuccessListener { query ->
                     if (!query.isEmpty) {
-                        Toast.makeText(this, "El username ya existe para esta familia", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "El nombre de usuario ya existe para esta familia", Toast.LENGTH_SHORT).show()
                     } else {
-                        saveChildProfile(firstName, lastName, age, username, password)
+                        saveChildProfile(firstName, lastName, age, username)
                     }
                 }
                 .addOnFailureListener { e ->
@@ -150,11 +137,8 @@ class CreateChildProfileActivity : AppCompatActivity() {
         firstName: String,
         lastName: String,
         age: Int,
-        username: String,
-        password: String
+        username: String
     ) {
-        val passwordToSave = if (useHash) hashPassword(password) else password
-
         val childData = hashMapOf(
             "name" to firstName,
             "lastName" to lastName,
@@ -163,20 +147,18 @@ class CreateChildProfileActivity : AppCompatActivity() {
             "level" to "facil",
             "parentId" to parentId,
             "username" to username,
-            "password" to passwordToSave,
             "familyCode" to familyCode
         )
 
-        // 🔹 Guardar en colección children
+        // Guardar en colección children
         db.collection("children")
             .add(childData)
             .addOnSuccessListener { docRef ->
                 val childId = docRef.id
 
-                // 🔹 Crear usuario del niño en colección users
+                // Crear usuario del niño en colección users
                 val userChildData = hashMapOf(
                     "username" to username,
-                    "password" to passwordToSave,
                     "familyCode" to familyCode,
                     "role" to "child",
                     "childId" to childId,
@@ -186,7 +168,7 @@ class CreateChildProfileActivity : AppCompatActivity() {
                 db.collection("users").document(childId)
                     .set(userChildData)
                     .addOnSuccessListener {
-                        // 🔹 Vincular el hijo con el padre
+                        // Vincular el hijo con el padre
                         db.collection("users").document(parentId)
                             .update(
                                 mapOf(
@@ -196,19 +178,16 @@ class CreateChildProfileActivity : AppCompatActivity() {
                                 )
                             )
                             .addOnSuccessListener {
-                                Toast.makeText(this, "Padre vinculado correctamente", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Perfil del hijo creado correctamente", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this, SelectMissionsActivity::class.java)
+                                intent.putExtra("childId", childId)
+                                intent.putExtra("childAge", age)
+                                startActivity(intent)
+                                finish()
                             }
                             .addOnFailureListener { e ->
                                 Toast.makeText(this, "Error al vincular padre: ${e.message}", Toast.LENGTH_LONG).show()
                             }
-
-                        Toast.makeText(this, "Perfil del hijo creado correctamente", Toast.LENGTH_SHORT).show()
-
-                        val intent = Intent(this, SelectMissionsActivity::class.java)
-                        intent.putExtra("childId", childId)
-                        intent.putExtra("childAge", age)
-                        startActivity(intent)
-                        finish()
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(this, "Error al guardar en users: ${e.message}", Toast.LENGTH_LONG).show()
@@ -217,11 +196,5 @@ class CreateChildProfileActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al guardar perfil: ${e.message}", Toast.LENGTH_LONG).show()
             }
-    }
-
-    // ------------------- HASH OPCIONAL -------------------
-    private fun hashPassword(password: String): String {
-        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
-        return bytes.joinToString("") { "%02x".format(it) }
     }
 }

@@ -171,6 +171,19 @@
             android:label="Tablero de Misiones"
             android:theme="@style/Theme.MisiónLogromanía" />
 
+        <!-- Activity de recompensas del niño -->
+        <activity
+            android:name=".ui.rewards.RedeemRewardActivity"
+            android:exported="true"
+            android:label="Recompensas"
+            android:theme="@style/Theme.MisiónLogromanía"
+            android:parentActivityName=".ui.menu.KidHomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.menu.KidHomeActivity" />
+        </activity>
+
+
         <!-- FileProvider para compartir archivos -->
         <provider
             android:name="androidx.core.content.FileProvider"
