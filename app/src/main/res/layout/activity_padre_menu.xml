@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
@@ -95,6 +94,18 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
                 android:layout_marginBottom="24dp" />
+
+            <!-- 🔘 Botón de Cerrar Sesión del padre -->
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cerrar Sesión"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
     </ScrollView>
 
@@ -115,9 +126,10 @@
             android:layout_width="340dp"
             android:layout_height="wrap_content"
             android:background="@drawable/board_bg"
-            android:padding="20dp"
+            android:padding="24dp"
             android:elevation="10dp"
-            android:clipToOutline="true">
+            android:clipToOutline="true"
+            android:layout_marginHorizontal="16dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -135,7 +147,7 @@
                 android:layout_marginVertical="8dp"
                 android:background="#CCCCCC" />
 
-            <!-- 🔹 Contenedor dinámico con scroll -->
+            <!-- 🔹 Contenedor dinámico con scroll para notificaciones individuales -->
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,10 +159,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="4dp" />
+                    android:padding="8dp" />
             </ScrollView>
 
-            <!-- 🔘 Botón ACEPTAR general -->
+            <!-- 🔘 Botón ACEPTAR general (opcional) -->
             <Button
                 android:id="@+id/btnAceptar"
                 android:layout_width="wrap_content"
@@ -160,7 +172,8 @@
                 android:text="ACEPTAR"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#3B82F6" />
+                android:backgroundTint="#3B82F6"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
 </FrameLayout>

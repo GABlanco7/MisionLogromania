@@ -191,22 +191,47 @@ class RedeemRewardActivity : AppCompatActivity() {
             }
     }
 
-    // === ENVIAR NOTIFICACIÓN AL PADRE ===
+    // === ENVIAR NOTIFICACIÓN AL PADRE (CORREGIDO) ===
     private fun sendParentNotification(reward: Reward) {
-        val notification = hashMapOf(
-            "type" to "reward_redeemed",
-            "message" to "Tu hijo ha canjeado la recompensa \"${reward.title}\"",
-            "timestamp" to System.currentTimeMillis(),
-            "childId" to childId
-        )
+        val childIdSafe = childId ?: return
 
-        db.collection("notifications")
-            .add(notification)
-            .addOnSuccessListener {
-                Log.d(TAG, "Notificación enviada correctamente al padre.")
+        db.collection("children").document(childIdSafe).get()
+            .addOnSuccessListener { doc ->
+                if (!doc.exists()) {
+                    Log.e(TAG, "Documento del niño no existe")
+                    return@addOnSuccessListener
+                }
+
+                // Crear la nueva notificación
+                val newNotification = mapOf(
+                    "title" to "Recompensa canjeada",
+                    "message" to "Tu hijo ha canjeado: ${reward.title} (${reward.requiredStars} estrellas)",
+                    "rewardTitle" to reward.title,
+                    "timestamp" to System.currentTimeMillis(),
+                    "seen" to false,
+                    "type" to "reward_redeemed",
+                    "missionId" to "reward_${System.currentTimeMillis()}" // ID único para identificar
+                )
+
+                // Obtener notificaciones actuales
+                val currentNotifications = (doc.get("notifications") as? List<*>)?.mapNotNull {
+                    it as? Map<String, Any>
+                }?.toMutableList() ?: mutableListOf()
+
+                // Agregar la nueva notificación
+                currentNotifications.add(newNotification)
+
+                // Actualizar el documento del niño
+                doc.reference.update("notifications", currentNotifications)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "✅ Notificación guardada correctamente en el documento del niño")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e(TAG, "❌ Error al guardar notificación: ${e.message}", e)
+                    }
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "Error al enviar notificación: ${e.message}", e)
+                Log.e(TAG, "❌ Error al obtener documento del niño: ${e.message}", e)
             }
     }
 }

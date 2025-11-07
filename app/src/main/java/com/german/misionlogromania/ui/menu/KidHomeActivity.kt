@@ -8,10 +8,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.german.misionlogromania.R
+import com.german.misionlogromania.ui.MainActivity
 import com.german.misionlogromania.ui.login.ChildLoginActivity
 import com.german.misionlogromania.ui.board.MissionBoardActivity
 import com.google.firebase.firestore.ktx.firestore
@@ -26,7 +28,8 @@ class KidHomeActivity : AppCompatActivity() {
     private lateinit var missionsRecyclerView: RecyclerView
     private lateinit var starsTitleTextView: TextView
     private lateinit var starsCountTextView: TextView
-    private lateinit var btnRedeemReward: Button   // <-- Botón añadido
+    private lateinit var btnRedeemReward: Button
+    private lateinit var btnLogout: Button  // 🔹 Botón de cerrar sesión agregado
 
     private var childId: String? = null
 
@@ -40,9 +43,10 @@ class KidHomeActivity : AppCompatActivity() {
         missionsRecyclerView = findViewById(R.id.missionsRecyclerView)
         starsTitleTextView = findViewById(R.id.tvStarsTitle)
         starsCountTextView = findViewById(R.id.tvStarsCount)
-        btnRedeemReward = findViewById(R.id.btnRedeemReward) // <-- Inicialización
+        btnRedeemReward = findViewById(R.id.btnRedeemReward)
+        btnLogout = findViewById(R.id.btnLogout) // <-- Nuevo botón
 
-        // 🔹 Configurar botón de canje
+        // 🔹 Configurar botón de canje de recompensa
         btnRedeemReward.setOnClickListener {
             if (childId != null) {
                 val intent = Intent(this, RedeemRewardActivity::class.java)
@@ -51,6 +55,11 @@ class KidHomeActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "ID del niño no encontrado", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // 🔹 Configurar botón de cerrar sesión
+        btnLogout.setOnClickListener {
+            showLogoutDialog()
         }
 
         // 🔹 Verificar sesión del niño
@@ -71,6 +80,32 @@ class KidHomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Error: ID del niño no encontrado", Toast.LENGTH_SHORT).show()
         }
     }
+
+    /** 🔹 Mostrar diálogo de confirmación para cerrar sesión */
+    private fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Cerrar sesión")
+        builder.setMessage("¿Estás seguro de que deseas cerrar sesión?")
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+            val prefs = getSharedPreferences("child_prefs", MODE_PRIVATE).edit()
+            prefs.clear() // Limpia los datos guardados de la sesión del niño
+            prefs.apply()
+
+            // Redirigir al menú principal (MainActivity)
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
+
+
 
     /** 🔹 Cargar perfil del niño */
     private fun loadChildProfile(childId: String) {

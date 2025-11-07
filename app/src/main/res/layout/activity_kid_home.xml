@@ -106,5 +106,17 @@
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"/>
+
+        <!-- Botón Cerrar Sesión -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar sesión"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#F44336"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins" />
     </LinearLayout>
 </ScrollView>

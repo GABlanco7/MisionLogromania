@@ -1,14 +1,14 @@
 package com.german.misionlogromania.ui.board
 
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.german.misionlogromania.R
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.text.DateFormatSymbols
@@ -27,11 +27,11 @@ class MissionBoardActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
     private lateinit var container: LinearLayout
-    private lateinit var btnBack: ImageButton
     private lateinit var rvDays: RecyclerView
     private lateinit var tvMonth: TextView
     private lateinit var btnPrevMonth: ImageButton
     private lateinit var btnNextMonth: ImageButton
+    private lateinit var btnBack: ImageButton
 
     private var childId: String? = null
     private lateinit var adapter: DayAdapter
@@ -41,19 +41,39 @@ class MissionBoardActivity : AppCompatActivity() {
     private val confirmedDays = mutableMapOf<Pair<Int, Int>, List<Int>>()
     private var currentMission: Mission? = null
 
+    // 🆕 Variable para detectar si es modo solo lectura (padre)
+    private var isReadOnlyMode = false
+
+    // 🔔 Overlay de notificaciones
+    private lateinit var overlayNotificaciones: FrameLayout
+    private lateinit var overlayContentNotifications: LinearLayout
+    private lateinit var btnAceptar: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_boards_general)
 
+        // 🔹 Referencias UI
         container = findViewById(R.id.mainBoardContainer)
-        btnBack = findViewById(R.id.btnBack)
         rvDays = findViewById(R.id.rvDays)
         tvMonth = findViewById(R.id.tvMonthName)
         btnPrevMonth = findViewById(R.id.btnPrevMonth)
         btnNextMonth = findViewById(R.id.btnNextMonth)
+        btnBack = findViewById(R.id.btnBack)
 
+        overlayNotificaciones = findViewById(R.id.overlayNotificaciones)
+        overlayContentNotifications = findViewById(R.id.overlayContentNotifications)
+        btnAceptar = findViewById(R.id.btnAceptar)
+        btnAceptar.visibility = View.GONE
+
+        // 🔹 Botones
         btnBack.setOnClickListener { finish() }
+        btnAceptar.setOnClickListener { hideNotifications() }
 
+        // 🆕 DETECTAR SI ES MODO SOLO LECTURA (viene del padre)
+        isReadOnlyMode = intent.getBooleanExtra("readOnlyMode", false)
+
+        // 🔹 Obtener ID del niño
         childId = intent.getStringExtra("childId")
             ?: getSharedPreferences("child_prefs", MODE_PRIVATE).getString("childId", null)
 
@@ -85,7 +105,6 @@ class MissionBoardActivity : AppCompatActivity() {
         db.collection("children").document(childId!!).get()
             .addOnSuccessListener { doc ->
                 if (!doc.exists()) return@addOnSuccessListener
-
                 val raw = doc.get("assignedMissions") as? List<*> ?: emptyList<Any>()
                 for (item in raw) {
                     val map = item as? Map<*, *> ?: continue
@@ -102,7 +121,10 @@ class MissionBoardActivity : AppCompatActivity() {
 
     private fun createMissionBoard(mission: Mission) =
         layoutInflater.inflate(R.layout.layout_single_board, container, false).apply {
-            findViewById<TextView>(R.id.tvBoardTitle).text = mission.title
+            val titleView = findViewById<TextView>(R.id.tvBoardTitle)
+            // ✅ Título normal sin indicador de solo lectura
+            titleView.text = mission.title
+
             currentMission = mission
             loadConfirmedDays(mission) { showMonth(currentYear, currentMonth) }
         }
@@ -113,7 +135,7 @@ class MissionBoardActivity : AppCompatActivity() {
             .whereEqualTo("missionId", mission.id)
             .whereEqualTo("confirmedByParent", true)
             .get()
-            .addOnSuccessListener { docs ->
+            .addOnSuccessListener { docs: QuerySnapshot ->
                 confirmedDays.clear()
                 for (doc in docs) {
                     val timestamp = doc.get("timestamp") as? com.google.firebase.Timestamp ?: continue
@@ -140,11 +162,33 @@ class MissionBoardActivity : AppCompatActivity() {
         for (d in days) if (d.dayNumber in confirmedList) d.isConfirmed = true
 
         rvDays.layoutManager = GridLayoutManager(this, 5)
-        adapter = DayAdapter(days) { day ->
-            if (day.isToday) sendMissionConfirmationToParent(day)
-            else Toast.makeText(this, "Solo puedes confirmar el día actual", Toast.LENGTH_SHORT).show()
+
+        // 🆕 PASAR EL MODO DE SOLO LECTURA AL ADAPTER
+        adapter = DayAdapter(days, isReadOnlyMode) { day ->
+            // Solo permite acciones si NO es modo solo lectura
+            if (!isReadOnlyMode) {
+                if (day.isToday) showConfirmationDialog(day)
+                else Toast.makeText(this, "Solo puedes confirmar el día actual", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "👁️ Vista de solo lectura. No puedes editar.", Toast.LENGTH_SHORT).show()
+            }
         }
         rvDays.adapter = adapter
+    }
+
+    private fun showConfirmationDialog(day: Day) {
+        val mission = currentMission ?: return
+        val fecha = "${day.dayNumber} de ${DateFormatSymbols().months[currentMonth]} de $currentYear"
+
+        AlertDialog.Builder(this)
+            .setTitle("Confirmar tarea")
+            .setMessage("¿Estás seguro que realizaste la tarea \"${mission.title}\" el $fecha?")
+            .setPositiveButton("Aceptar") { dialog, _ ->
+                sendMissionConfirmationToParent(day)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     private fun changeMonth(offset: Int) {
@@ -160,7 +204,6 @@ class MissionBoardActivity : AppCompatActivity() {
     private fun generateDaysOfMonth(year: Int, month: Int): List<Day> {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, 1)
-
         val todayCal = Calendar.getInstance()
         val today = todayCal.get(Calendar.DAY_OF_MONTH)
         val currentMonth = todayCal.get(Calendar.MONTH)
@@ -178,14 +221,19 @@ class MissionBoardActivity : AppCompatActivity() {
             calendar.set(Calendar.DAY_OF_MONTH, dayNum)
             val dow = calendar.get(Calendar.DAY_OF_WEEK)
             if (dow in Calendar.MONDAY..Calendar.FRIDAY) {
-                val isToday = (dayNum == today && month == currentMonth && year == currentYear)
+                // 🆕 Si es modo solo lectura, NO marcar como "isToday"
+                val isToday = if (isReadOnlyMode) {
+                    false // En modo padre, no destacar el día actual
+                } else {
+                    (dayNum == today && month == currentMonth && year == currentYear)
+                }
                 days.add(Day(dayNum, isToday, true))
             }
         }
         return days
     }
 
-    /** ✅ Enviar confirmación al padre */
+    /** ✅ Enviar confirmación al padre y guardar notificación */
     private fun sendMissionConfirmationToParent(day: Day) {
         val mission = currentMission ?: return
         val fecha = "${day.dayNumber} de ${DateFormatSymbols().months[currentMonth]} de $currentYear"
@@ -204,14 +252,35 @@ class MissionBoardActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 val mensaje = "Su hijo completó la misión \"${mission.title}\" el $fecha"
                 addNotificationForParent(mission, mensaje)
-                Toast.makeText(this, "Confirmación enviada al padre", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(this, "Confirmación enviada", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Error al enviar confirmación", Toast.LENGTH_SHORT).show()
             }
     }
 
-    /** 🔔 Guardar notificación de misión completada para el padre */
+    /** 🔔 Mostrar overlay de notificación */
+    private fun showNotifications(message: String) {
+        overlayNotificaciones.visibility = View.VISIBLE
+        overlayContentNotifications.removeAllViews()
+
+        val tv = TextView(this).apply {
+            text = message
+            textSize = 16f
+            setTextColor(resources.getColor(R.color.black))
+            setPadding(8, 8, 8, 8)
+        }
+        overlayContentNotifications.addView(tv)
+        btnAceptar.visibility = View.VISIBLE
+    }
+
+    private fun hideNotifications() {
+        overlayNotificaciones.visibility = View.GONE
+        btnAceptar.visibility = View.GONE
+    }
+
+    /** 🔔 Guardar notificación de misión completada */
     private fun addNotificationForParent(mission: Mission, message: String) {
         val childIdSafe = childId ?: return
 
@@ -224,11 +293,12 @@ class MissionBoardActivity : AppCompatActivity() {
                         "message" to message,
                         "timestamp" to System.currentTimeMillis(),
                         "seen" to false,
-                        "type" to "mission_completed" // <- clave para filtrar
+                        "type" to "mission_completed"
                     )
 
-                    val currentNotifications =
-                        (doc.get("notifications") as? MutableList<Map<String, Any>> ?: mutableListOf()).toMutableList()
+                    val currentNotifications = (doc.get("notifications") as? List<*>)?.mapNotNull {
+                        it as? Map<String, Any>
+                    }?.toMutableList() ?: mutableListOf()
 
                     val existingIndex = currentNotifications.indexOfFirst { it["missionId"] == mission.id }
                     if (existingIndex >= 0) currentNotifications[existingIndex] = newNotification

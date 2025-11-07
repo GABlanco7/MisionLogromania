@@ -11,6 +11,7 @@ import com.german.misionlogromania.R
 
 class DayAdapter(
     private val days: List<Day>,
+    private val isReadOnlyMode: Boolean = false, // 🆕 Parámetro para modo solo lectura
     private val onClick: (Day) -> Unit
 ) : RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
 
@@ -60,15 +61,25 @@ class DayAdapter(
         // Mostrar estrellita solo si está confirmado
         holder.ivStar.visibility = if (day.isConfirmed) View.VISIBLE else View.GONE
 
-        // Acción al hacer clic
+        // 🆕 LÓGICA DE CLICK MODIFICADA
         holder.itemView.setOnClickListener {
-            when {
-                day.isConfirmed -> {
-                    Toast.makeText(holder.itemView.context, "Este día ya fue confirmado", Toast.LENGTH_SHORT).show()
-                }
-                day.isToday -> onClick(day)
-                else -> {
-                    Toast.makeText(holder.itemView.context, "Solo puedes marcar el día actual", Toast.LENGTH_SHORT).show()
+            if (isReadOnlyMode) {
+                // Si es modo solo lectura, mostrar mensaje informativo
+                Toast.makeText(
+                    holder.itemView.context,
+                    "👁️ Vista de solo lectura. No puedes editar desde aquí.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                // Si es modo editable (hijo), permitir las acciones normales
+                when {
+                    day.isConfirmed -> {
+                        Toast.makeText(holder.itemView.context, "Este día ya fue confirmado", Toast.LENGTH_SHORT).show()
+                    }
+                    day.isToday -> onClick(day)
+                    else -> {
+                        Toast.makeText(holder.itemView.context, "Solo puedes marcar el día actual", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
