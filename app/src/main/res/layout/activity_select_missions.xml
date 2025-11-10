@@ -51,7 +51,26 @@
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:fontFamily="@font/baloo_2"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="16dp" />
+
+            <!-- Filtro de dificultad con Spinner -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filtrar por dificultad:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:fontFamily="@font/baloo_2"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/filterSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/spinner_background"
+                android:padding="12dp" />
 
             <!-- Contenedor dinámico de misiones -->
             <LinearLayout
@@ -76,6 +95,7 @@
                 android:textSize="18sp"
                 android:fontFamily="@font/merriweather"
                 android:layout_marginTop="8dp" />
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

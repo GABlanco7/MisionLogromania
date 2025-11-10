@@ -23,28 +23,36 @@ class ConfirmMissionsActivity : AppCompatActivity() {
     private lateinit var rewardsLayout: LinearLayout
     private lateinit var btnConfirmSelection: Button
     private lateinit var btnCancel: Button
+
     private var childId = ""
+    private var childAge = 0 // ✅ Edad persistente del niño
     private val TAG = "ConfirmMissionsActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirm_missions)
 
-        // Referencias a vistas
+        // Referencias de UI
         missionsLayout = findViewById(R.id.layoutMissions)
         rewardsLayout = findViewById(R.id.layoutRewards)
         btnConfirmSelection = findViewById(R.id.btnConfirmSelection)
         btnCancel = findViewById(R.id.btnCancel)
 
+        // 📦 Recuperar datos del intent
         childId = intent.getStringExtra("childId") ?: ""
+        childAge = intent.getIntExtra("childAge", 0)
 
+        Log.d(TAG, "onCreate: childId=$childId, childAge=$childAge")
+
+        // Recuperar misiones seleccionadas
         val selectedMissions: ArrayList<Mission>? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayListExtra("selectedMissions", Mission::class.java)
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableArrayListExtra<Mission>("selectedMissions")
+            intent.getParcelableArrayListExtra("selectedMissions")
         }
 
+        // Mostrar o advertir
         if (selectedMissions.isNullOrEmpty()) {
             Toast.makeText(this, "No se encontraron misiones seleccionadas", Toast.LENGTH_SHORT).show()
         } else {
@@ -52,27 +60,28 @@ class ConfirmMissionsActivity : AppCompatActivity() {
             loadRewards()
         }
 
-        // Acción botón confirmar
+        // ✅ Confirmar selección
         btnConfirmSelection.setOnClickListener {
             if (selectedMissions.isNullOrEmpty()) {
                 Toast.makeText(this, "No hay misiones para confirmar", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             saveMissionsToFirestore(selectedMissions)
         }
 
-        // Acción botón cancelar → volver a selección de misiones
+        // 🔙 Cancelar: volver a SelectMissionsActivity
         btnCancel.setOnClickListener {
+            Log.d(TAG, "Cancel pressed -> back to SelectMissionsActivity")
             val intent = Intent(this, SelectMissionsActivity::class.java)
             intent.putExtra("childId", childId)
+            intent.putExtra("childAge", childAge) // ✅ Reenviar edad
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
             finish()
         }
     }
 
-    /** 🎯 Mostrar misiones seleccionadas */
+    /** 🎯 Mostrar lista de misiones seleccionadas */
     private fun displayMissions(missions: List<Mission>) {
         missionsLayout.removeAllViews()
         missions.forEach { mission ->
@@ -85,7 +94,7 @@ class ConfirmMissionsActivity : AppCompatActivity() {
         }
     }
 
-    /** 🏆 Cargar recompensas agrupadas por nivel/dificultad */
+    /** 🏆 Cargar recompensas desde Firestore agrupadas por nivel */
     private fun loadRewards() {
         Log.d(TAG, "Cargando recompensas desde Firestore...")
         rewardsLayout.removeAllViews()
@@ -103,7 +112,6 @@ class ConfirmMissionsActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
 
-                // Agrupar recompensas por nivel
                 val rewardsByLevel = mutableMapOf<String, MutableList<RewardData>>()
 
                 docs.forEach { doc ->
@@ -112,28 +120,18 @@ class ConfirmMissionsActivity : AppCompatActivity() {
                     val points = doc.getLong("points") ?: 0L
                     val level = doc.getString("level") ?: "medio"
 
-                    // Normalizar el nivel
                     val normalizedLevel = when (level.trim().lowercase()) {
                         "facil", "fácil" -> "Fácil"
                         "medio" -> "Medio"
                         "avanzado", "dificil", "difícil" -> "Avanzado"
-                        else -> level.trim().replaceFirstChar {
-                            if (it.isLowerCase()) it.titlecase() else it.toString()
-                        }
+                        else -> level.trim().replaceFirstChar { it.uppercase() }
                     }
 
-                    if (!rewardsByLevel.containsKey(normalizedLevel)) {
-                        rewardsByLevel[normalizedLevel] = mutableListOf()
-                    }
-
-                    rewardsByLevel[normalizedLevel]?.add(
-                        RewardData(title, description, points, normalizedLevel)
-                    )
+                    rewardsByLevel.getOrPut(normalizedLevel) { mutableListOf() }
+                        .add(RewardData(title, description, points, normalizedLevel))
                 }
 
-                Log.d(TAG, "Niveles encontrados: ${rewardsByLevel.keys}")
-
-                // Ordenar niveles
+                // Orden visual
                 val levelOrder = listOf("Fácil", "Medio", "Avanzado")
                 val sortedLevels = rewardsByLevel.keys.sortedBy { level ->
                     levelOrder.indexOf(level).takeIf { it >= 0 } ?: 999
@@ -143,7 +141,6 @@ class ConfirmMissionsActivity : AppCompatActivity() {
                 sortedLevels.forEach { level ->
                     val rewards = rewardsByLevel[level] ?: return@forEach
 
-                    // Título del nivel
                     val levelTitle = TextView(this).apply {
                         text = "🌟 $level"
                         textSize = 20f
@@ -153,12 +150,11 @@ class ConfirmMissionsActivity : AppCompatActivity() {
                     }
                     rewardsLayout.addView(levelTitle)
 
-                    // Recompensas del nivel
                     rewards.forEach { reward ->
                         val tv = TextView(this).apply {
                             text = "🏆 ${reward.title}\n" +
-                                    if (reward.description.isNotEmpty()) "${reward.description}\n" else "" +
-                                            "Puntos: ${reward.points} ⭐"
+                                    (if (reward.description.isNotEmpty()) "${reward.description}\n" else "") +
+                                    "Puntos: ${reward.points} ⭐"
                             textSize = 16f
                             setPadding(32, 8, 16, 8)
                             setLineSpacing(4f, 1f)
@@ -173,72 +169,71 @@ class ConfirmMissionsActivity : AppCompatActivity() {
             }
     }
 
-    /** 💾 Guardar misiones y crear notificación al padre */
+    /** 💾 Guardar misiones asignadas y crear notificación para el padre */
     private fun saveMissionsToFirestore(missions: List<Mission>) {
         val childRef = db.collection("children").document(childId)
 
-        childRef.get().addOnSuccessListener { doc ->
-            val currentMissions = (doc.get("assignedMissions") as? MutableList<Map<String, Any>> ?: mutableListOf())
-            val currentNotifications = (doc.get("notifications") as? MutableList<Map<String, Any>> ?: mutableListOf())
+        childRef.get()
+            .addOnSuccessListener { doc ->
+                val currentMissions = (doc.get("assignedMissions") as? MutableList<Map<String, Any>> ?: mutableListOf())
+                val currentNotifications = (doc.get("notifications") as? MutableList<Map<String, Any>> ?: mutableListOf())
 
-            val newMissions = missions.map { mission ->
-                mapOf(
-                    "id" to mission.id,
-                    "title" to mission.title,
-                    "description" to mission.description,
-                    "difficulty" to mission.difficulty,
-                    "category" to mission.category,
-                    "points" to 1
-                )
-            }
+                val newMissions = missions.map { mission ->
+                    mapOf(
+                        "id" to mission.id,
+                        "title" to mission.title,
+                        "description" to mission.description,
+                        "difficulty" to mission.difficulty,
+                        "category" to mission.category,
+                        "points" to 1
+                    )
+                }
 
-            // 🔹 Evitar duplicados
-            val finalMissions = currentMissions.toMutableList()
-            for (m in newMissions) {
-                val exists = finalMissions.any { it["id"] == m["id"] }
-                if (!exists) finalMissions.add(m)
-            }
+                val finalMissions = currentMissions.toMutableList().apply {
+                    newMissions.forEach { new ->
+                        if (none { it["id"] == new["id"] }) add(new)
+                    }
+                }
 
-            // 🔹 Crear notificaciones nuevas
-            val newNotifications = missions.map { mission ->
-                mapOf(
-                    "missionId" to mission.id,
-                    "title" to "Nueva misión asignada",
-                    "message" to "Tu hijo tiene una nueva misión: ${mission.title}",
-                    "seen" to false
-                )
-            }
+                val newNotifications = missions.map { mission ->
+                    mapOf(
+                        "missionId" to mission.id,
+                        "title" to "Nueva misión asignada",
+                        "message" to "Tu hijo tiene una nueva misión: ${mission.title}",
+                        "seen" to false
+                    )
+                }
 
-            val finalNotifications = currentNotifications.toMutableList()
-            finalNotifications.addAll(newNotifications)
+                val finalNotifications = currentNotifications.toMutableList().apply {
+                    addAll(newNotifications)
+                }
 
-            // 🔹 Guardar en Firestore
-            childRef.update(
-                mapOf(
-                    "assignedMissions" to finalMissions,
-                    "notifications" to finalNotifications
-                )
-            )
-                .addOnSuccessListener {
+                childRef.update(
+                    mapOf(
+                        "assignedMissions" to finalMissions,
+                        "notifications" to finalNotifications
+                    )
+                ).addOnSuccessListener {
                     Toast.makeText(this, "Misiones y notificaciones guardadas", Toast.LENGTH_SHORT).show()
                     goToParentMenu()
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     Toast.makeText(this, "Error al guardar: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
-
-        }.addOnFailureListener { e ->
-            Toast.makeText(this, "Error al obtener niño: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error al obtener niño: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
-    /** 🔙 Regresar al menú del padre (solo se usa al confirmar) */
+    /** 🔙 Regresar al menú del padre (solo al confirmar) */
     private fun goToParentMenu() {
-        startActivity(Intent(this, PadreMenuActivity::class.java))
+        val intent = Intent(this, PadreMenuActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
         finish()
     }
 
-    /** 📦 Clase de datos simple para recompensas */
+    /** 📦 Estructura para recompensas */
     private data class RewardData(
         val title: String,
         val description: String,
