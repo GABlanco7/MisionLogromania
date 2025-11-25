@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
     android:fitsSystemWindows="true">
 
-    <!-- Fondo dividido en dos mitades (transparente para dejar ver el gradient) -->
+    <!-- Fondo dividido en dos mitades -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@android:color/transparent">
 
-        <!-- Mitad superior: estrellas -->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -22,7 +22,6 @@
             android:contentDescription="Fondo estrellado"
             android:background="@android:color/transparent" />
 
-        <!-- Mitad inferior: nubes -->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -40,7 +39,6 @@
         android:fillViewport="true"
         android:background="@android:color/transparent">
 
-        <!-- FrameLayout interno para centrar verticalmente -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -71,11 +69,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Iniciar sesión"
-                    android:textSize="28sp"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     android:textColor="#000000"
                     android:layout_marginBottom="26dp"
-                    android:fontFamily="@font/baloo_2" />
+                    android:fontFamily="@font/baloo_2"
+                    android:background="@drawable/title_bg"
+                    android:padding="12dp" />
 
                 <!-- Campo usuario -->
                 <EditText
@@ -86,18 +86,29 @@
                     android:inputType="text"
                     android:layout_marginBottom="12dp"
                     android:backgroundTint="#000000"
-                    android:fontFamily="@font/poppins" />
+                    android:textColor="#000000"
+                    android:fontFamily="@font/merriweather" />
 
-                <!-- Campo contraseña -->
-                <EditText
-                    android:id="@+id/etPassword"
+                <!-- Campo contraseña con ojito y estilo idéntico al campo de correo -->
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword"
                     android:layout_marginBottom="12dp"
-                    android:backgroundTint="#000000"
-                    android:fontFamily="@font/poppins" />
+                    app:boxBackgroundMode="none"
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="#000000"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Contraseña"
+                        android:inputType="textPassword"
+                        android:backgroundTint="#000000"
+                        android:textColor="#000000"
+                        android:fontFamily="@font/merriweather" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- CheckBox: Mantener sesión abierta -->
                 <CheckBox
@@ -106,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:text="Mantener sesión iniciada"
                     android:textColor="#000000"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/merriweather"
                     android:layout_marginBottom="24dp" />
 
                 <!-- Botón Iniciar sesión -->
@@ -116,9 +127,9 @@
                     android:layout_height="wrap_content"
                     android:text="Iniciar sesión"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="25sp"
                     android:backgroundTint="#004aad"
-                    android:fontFamily="@font/merriweather"
+                    android:fontFamily="@font/baloo_2"
                     android:paddingLeft="32dp"
                     android:paddingRight="32dp"
                     android:paddingTop="12dp"
@@ -133,7 +144,7 @@
                     android:textColor="#004aad"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/merriweather"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="8dp" />
 
@@ -146,7 +157,7 @@
                     android:textColor="#004aad"
                     android:textSize="16sp"
                     android:layout_marginTop="16dp"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/merriweather"
                     android:layout_gravity="center" />
 
             </LinearLayout>

@@ -5,33 +5,28 @@
     android:background="@drawable/gradient_background"
     android:fitsSystemWindows="true">
 
-    <!-- Fondo dividido en dos mitades: estrellas y nubes -->
+    <!-- Fondo dividido (estrellas y nubes) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@android:color/transparent">
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/stars"
-            android:contentDescription="Fondo estrellado"
-            android:background="@android:color/transparent" />
+            android:src="@drawable/stars" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@drawable/clouds"
-            android:contentDescription="Fondo de nubes"
-            android:background="@android:color/transparent" />
+            android:src="@drawable/clouds" />
     </LinearLayout>
 
-    <!-- Contenido principal del login -->
+    <!-- CONTENIDO CENTRADO VERTICAL -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,60 +35,73 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center">
 
-            <!-- Botón volver -->
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
+            <!-- Contenedor que permite centrar y mover flecha a la izquierda -->
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="Volver"
-                android:tint="#000000"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="24dp">
+
+                <!-- Flecha alineada a la izquierda -->
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_arrow_back"
+                    android:tint="#000000"
+                    android:contentDescription="Volver"
+                    android:layout_alignParentStart="true" />
+            </RelativeLayout>
 
             <!-- Título -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Inicio de sesión del niño"
-                android:textSize="28sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
+                android:fontFamily="@font/baloo_2"
                 android:layout_marginBottom="26dp"
-                android:layout_gravity="center" />
+                android:gravity="center"
+                android:background="@drawable/title_bg"
+                android:padding="12dp"/>
 
-            <!-- Solo código familiar -->
+
+            <!-- Input código familiar -->
             <EditText
                 android:id="@+id/etFamilyCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Código familiar"
-                android:inputType="text"
+                android:fontFamily="@font/merriweather"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Checkbox de recordar sesión -->
+            <!-- Checkbox -->
             <CheckBox
                 android:id="@+id/cbRememberSession"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recordar mi sesión"
-                android:layout_marginBottom="24dp" />
+                android:fontFamily="@font/merriweather"
+                android:layout_marginBottom="26dp" />
 
-            <!-- Botón login -->
+            <!-- Botón de login -->
             <Button
                 android:id="@+id/btnChildLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Iniciar sesión"
                 android:textColor="#FFFFFF"
+                android:fontFamily="@font/baloo_2"
+                android:textSize="25sp"
                 android:backgroundTint="#004aad"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp" />
 
@@ -102,8 +110,9 @@
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

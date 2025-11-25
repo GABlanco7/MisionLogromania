@@ -28,7 +28,13 @@
             android:contentDescription="Fondo de nubes" />
     </LinearLayout>
 
-    <!-- Contenido -->
+    <!-- Overlay (NO tapa el contenido porque va debajo del ScrollView) -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#40FFFFFF" />
+
+    <!-- Contenido principal (encima del overlay) -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,45 +48,61 @@
             android:padding="24dp"
             android:gravity="center_horizontal">
 
-            <!-- Título -->
+            <!-- Título Misiones -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tus misiones seleccionadas"
-                android:textSize="24sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="#1A237E"
                 android:fontFamily="@font/baloo_2"
-                android:layout_marginBottom="16dp" />
+                android:shadowColor="#66000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/title_bg"
+                android:padding="12dp"/>
 
-            <!-- Contenedor dinámico para mostrar misiones -->
+            <!-- Contenedor dinámico de misiones -->
             <LinearLayout
                 android:id="@+id/layoutMissions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle"
                 android:layout_marginBottom="32dp" />
 
-            <!-- Título recompensas -->
+            <!-- Título Recompensas -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recompensas posibles"
-                android:textSize="24sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="#1A237E"
                 android:fontFamily="@font/baloo_2"
-                android:layout_marginBottom="16dp" />
+                android:shadowColor="#66000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/title_bg"
+                android:padding="12dp" />
 
-            <!-- Contenedor dinámico para mostrar recompensas -->
+            <!-- Contenedor dinámico de recompensas -->
             <LinearLayout
                 android:id="@+id/layoutRewards"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle"
                 android:layout_marginBottom="32dp" />
 
-            <!-- Contenedor horizontal para los botones -->
+            <!-- Botones -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,13 +117,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Cancelar"
-                    android:backgroundTint="#B0B0B0"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/merriweather"
+                    android:textSize="22sp"
+                    android:fontFamily="@font/baloo_2"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_cancel_bg" />
 
                 <!-- Botón Confirmar -->
                 <Button
@@ -110,13 +132,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Confirmar"
-                    android:backgroundTint="#004aad"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/merriweather"
+                    android:textSize="22sp"
+                    android:fontFamily="@font/baloo_2"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/btn_confirm_bg" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

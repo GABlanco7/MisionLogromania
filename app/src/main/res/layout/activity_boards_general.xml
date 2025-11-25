@@ -43,7 +43,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:background="@null"
-        android:src="@drawable/ic_back"
+        android:src="@drawable/ic_arrow_back"
         android:contentDescription="Volver"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -75,12 +75,13 @@
                 android:gravity="center"
                 android:layout_marginBottom="12dp">
 
+                <!-- Flecha izquierda -->
                 <ImageButton
                     android:id="@+id/btnPrevMonth"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_arrow_left"
+                    android:src="@drawable/atras"
                     android:contentDescription="Mes anterior" />
 
                 <TextView
@@ -93,12 +94,13 @@
                     android:textStyle="bold"
                     android:layout_marginHorizontal="16dp" />
 
+                <!-- Flecha derecha -->
                 <ImageButton
                     android:id="@+id/btnNextMonth"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_arrow_right"
+                    android:src="@drawable/adelante"
                     android:contentDescription="Mes siguiente" />
             </LinearLayout>
 

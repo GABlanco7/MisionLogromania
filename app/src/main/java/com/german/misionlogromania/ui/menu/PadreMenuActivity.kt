@@ -45,7 +45,9 @@ class PadreMenuActivity : AppCompatActivity() {
         btnLogout = findViewById(R.id.btnLogout)
 
         // Campanita visible siempre
+        // Campanita visible siempre
         ivNotification.visibility = View.VISIBLE
+        ivNotification.setColorFilter(Color.YELLOW) // 🔹 Agregado color amarillo brillante
         ivNotification.setOnClickListener { overlayNotificaciones.visibility = View.VISIBLE }
 
         btnAceptar.setOnClickListener {
@@ -279,11 +281,14 @@ class PadreMenuActivity : AppCompatActivity() {
         val missionsByCategory = missions.groupBy { it["category"] as? String ?: "General" }
 
         for ((category, missionsInCategory) in missionsByCategory) {
+            // --- Título de categoría ---
             val tvCategory = TextView(this).apply {
                 text = category.uppercase()
                 textSize = 20f
-                setTextColor(Color.parseColor("#FFD700"))
+                setTextColor(Color.parseColor("#A3CEF1")) // azul celeste
+                setShadowLayer(3f, 1f, 1f, Color.parseColor("#55000000")) // sombra ligera
                 setPadding(0, 16, 0, 8)
+                typeface = resources.getFont(R.font.poppins)
             }
             contenedorMisiones.addView(tvCategory)
 
@@ -292,23 +297,49 @@ class PadreMenuActivity : AppCompatActivity() {
                 val description = mission["description"]?.toString() ?: ""
                 val missionId = mission["id"]?.toString() ?: ""
 
-                val boton = Button(this).apply {
+                // --- Tarjeta de misión ---
+                val cardBackground = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    cornerRadius = 24f
+                    // Gradiente azul suave
+                    colors = intArrayOf(Color.parseColor("#4A90E2"), Color.parseColor("#1E3A8A"))
+                    orientation = GradientDrawable.Orientation.TOP_BOTTOM
+                }
+
+                val boton = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    background = cardBackground
+                    setPadding(24, 24, 24, 24)
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
-                    ).apply { bottomMargin = 12 }
+                    ).apply { bottomMargin = 16 }
 
-                    text = "🎯 $title\n$description"
-                    setBackgroundColor(Color.parseColor("#1F1F1F"))
-                    setTextColor(Color.parseColor("#FFD700"))
-                    textSize = 16f
-                    setPadding(16, 16, 16, 16)
+                    // --- Título de misión ---
+                    val tvTitle = TextView(context).apply {
+                        text = title
+                        textSize = 18f
+                        setTextColor(Color.WHITE)
+                        setTypeface(typeface, android.graphics.Typeface.BOLD)
+                    }
+
+                    // --- Descripción ---
+                    val tvDescription = TextView(context).apply {
+                        text = description
+                        textSize = 14f
+                        setTextColor(Color.parseColor("#DCE6F1")) // azul muy claro para jerarquía
+                        setPadding(0, 8, 0, 0)
+                    }
+
+                    addView(tvTitle)
+                    addView(tvDescription)
 
                     setOnClickListener {
-                        // 🆕 Abrir el calendario en modo SOLO LECTURA para el padre
+                        // Abrir el calendario en modo solo lectura
                         openMissionBoardReadOnly(childId, missionId, title)
                     }
                 }
+
                 contenedorMisiones.addView(boton)
             }
         }

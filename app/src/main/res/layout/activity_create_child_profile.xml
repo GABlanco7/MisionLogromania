@@ -30,7 +30,7 @@
             android:contentDescription="Fondo de nubes" />
     </LinearLayout>
 
-    <!-- Contenido -->
+    <!-- Contenido centrado -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,21 +40,24 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center">
 
             <!-- Título -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Crear cuenta del niño"
-                android:textSize="26sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
-                android:layout_marginBottom="24dp" />
+                android:background="@drawable/title_bg"
+                android:padding="12dp"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="@font/baloo_2"/>
 
-            <!-- Avatar y botón para desplegar -->
+            <!-- Avatar y desplegable -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,19 +72,17 @@
                     android:src="@drawable/avatar1"
                     android:background="@drawable/avatar_border"
                     android:scaleType="centerCrop"
-                    android:adjustViewBounds="true"
                     android:layout_marginEnd="12dp" />
 
                 <ImageView
                     android:id="@+id/btnExpandAvatars"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_expand_more"
-                    android:contentDescription="Mostrar más avatares"
+                    android:src="@drawable/abajo"
                     android:background="?attr/selectableItemBackgroundBorderless" />
             </LinearLayout>
 
-            <!-- Avatares alternativos -->
+            <!-- Avatares -->
             <LinearLayout
                 android:id="@+id/avatarOptionsLayout"
                 android:layout_width="wrap_content"
@@ -97,8 +98,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_margin="8dp"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:clickable="true" />
 
                 <ImageView
                     android:id="@+id/avatar2"
@@ -106,8 +106,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_margin="8dp"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:clickable="true" />
 
                 <ImageView
                     android:id="@+id/avatar3"
@@ -115,24 +114,25 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_margin="8dp"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:clickable="true" />
             </LinearLayout>
 
-            <!-- Campos de texto -->
+            <!-- Inputs -->
             <EditText
                 android:id="@+id/etFirstName"
                 android:hint="Nombres"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/merriweather"/>
 
             <EditText
                 android:id="@+id/etLastName"
                 android:hint="Apellidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/merriweather"/>
 
             <EditText
                 android:id="@+id/etAge"
@@ -140,17 +140,18 @@
                 android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/merriweather"/>
 
             <EditText
                 android:id="@+id/etUsername"
                 android:hint="Nombre de usuario"
-                android:inputType="text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="24dp"
+                android:fontFamily="@font/merriweather"/>
 
-            <!-- Botón guardar -->
+            <!-- Botón -->
             <Button
                 android:id="@+id/btnSave"
                 android:text="Crear cuenta"
@@ -160,15 +161,18 @@
                 android:textColor="@android:color/white"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/baloo_2"
+                android:textSize="25sp"/>
 
-            <!-- 🔹 Barra de carga mientras se obtiene el código familiar -->
+            <!-- Loading -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:visibility="gone" />
+
         </LinearLayout>
     </ScrollView>
+
 </FrameLayout>

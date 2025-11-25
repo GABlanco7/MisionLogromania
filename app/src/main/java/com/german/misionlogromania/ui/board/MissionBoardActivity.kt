@@ -182,7 +182,7 @@ class MissionBoardActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle("Confirmar tarea")
-            .setMessage("¿Estás seguro que realizaste la tarea \"${mission.title}\" el $fecha?")
+            .setMessage("¿Estás seguro que realizaste la misión \"${mission.title}\" el $fecha?")
             .setPositiveButton("Aceptar") { dialog, _ ->
                 sendMissionConfirmationToParent(day)
                 dialog.dismiss()

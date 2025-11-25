@@ -41,7 +41,7 @@ class KidHomeActivity : AppCompatActivity() {
         avatarImageView = findViewById(R.id.avatarImageView)
         usernameTextView = findViewById(R.id.usernameTextView)
         missionsRecyclerView = findViewById(R.id.missionsRecyclerView)
-        starsTitleTextView = findViewById(R.id.tvStarsTitle)
+
         starsCountTextView = findViewById(R.id.tvStarsCount)
         btnRedeemReward = findViewById(R.id.btnRedeemReward)
         btnLogout = findViewById(R.id.btnLogout) // <-- Nuevo botón

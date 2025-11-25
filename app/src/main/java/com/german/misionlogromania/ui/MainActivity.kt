@@ -24,19 +24,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ✅ View Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ✅ Crear canal de notificaciones
         createNotificationChannelIfNeeded()
 
-        // ✅ Pedir permiso de notificaciones
         requestNotificationPermission()
 
-        // ✅ Acción del botón "Comenzar"
         binding.btnStart.setOnClickListener {
-            checkSavedSession() // 🔹 Verifica sesión al presionar el botón
+            checkSavedSession()
         }
     }
 

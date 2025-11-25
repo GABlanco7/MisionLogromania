@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
@@ -69,7 +70,9 @@
                     android:textStyle="bold"
                     android:textColor="#000000"
                     android:fontFamily="@font/baloo_2"
-                    android:layout_marginBottom="24dp" />
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/title_bg"
+                    android:padding="12dp" />
 
                 <!-- Campo nombres -->
                 <EditText
@@ -80,7 +83,7 @@
                     android:inputType="textPersonName"
                     android:layout_marginBottom="12dp"
                     android:backgroundTint="#000000"
-                    android:fontFamily="@font/poppins" />
+                    android:fontFamily="@font/merriweather" />
 
                 <!-- Campo apellidos -->
                 <EditText
@@ -91,7 +94,7 @@
                     android:inputType="textPersonName"
                     android:layout_marginBottom="12dp"
                     android:backgroundTint="#000000"
-                    android:fontFamily="@font/poppins" />
+                    android:fontFamily="@font/merriweather" />
 
                 <!-- Campo correo -->
                 <EditText
@@ -102,29 +105,47 @@
                     android:inputType="textEmailAddress"
                     android:layout_marginBottom="12dp"
                     android:backgroundTint="#000000"
-                    android:fontFamily="@font/poppins" />
+                    android:fontFamily="@font/merriweather" />
 
-                <!-- Campo contraseña -->
-                <EditText
-                    android:id="@+id/etPassword"
+                <!-- Campo contraseña con ojo -->
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword"
                     android:layout_marginBottom="12dp"
-                    android:backgroundTint="#000000"
-                    android:fontFamily="@font/poppins" />
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="#000000"
+                    app:boxBackgroundMode="none"
+                    app:hintEnabled="false">
 
-                <!-- Campo confirmar contraseña -->
-                <EditText
-                    android:id="@+id/etConfirmPassword"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Contraseña"
+                        android:inputType="textPassword"
+                        android:backgroundTint="#000000"
+                        android:fontFamily="@font/merriweather" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Campo confirmar contraseña con ojo -->
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Confirmar contraseña"
-                    android:inputType="textPassword"
                     android:layout_marginBottom="24dp"
-                    android:backgroundTint="#000000"
-                    android:fontFamily="@font/poppins" />
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="#000000"
+                    app:boxBackgroundMode="none"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etConfirmPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Confirmar contraseña"
+                        android:inputType="textPassword"
+                        android:backgroundTint="#000000"
+                        android:fontFamily="@font/merriweather" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Mantener sesión iniciada -->
                 <CheckBox
@@ -134,7 +155,7 @@
                     android:text="Mantener sesión iniciada"
                     android:textColor="#000000"
                     android:layout_marginBottom="20dp"
-                    android:fontFamily="@font/poppins" />
+                    android:fontFamily="@font/merriweather" />
 
                 <!-- Botón registrarse -->
                 <Button
@@ -143,9 +164,10 @@
                     android:layout_height="wrap_content"
                     android:text="Registrarse"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="25sp"
                     android:backgroundTint="#004aad"
-                    android:fontFamily="@font/merriweather"
+                    android:fontFamily="@font/baloo_2"
+                    android:textStyle="bold"
                     android:paddingLeft="32dp"
                     android:paddingRight="32dp"
                     android:paddingTop="12dp"

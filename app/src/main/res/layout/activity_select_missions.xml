@@ -39,62 +39,69 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:padding="24dp">
 
-            <!-- Título -->
+            <!-- Título mejorado -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Selecciona tus misiones"
-                android:textSize="24sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:fontFamily="@font/baloo_2"
-                android:layout_marginBottom="16dp" />
+                android:padding="12dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/title_bg" />
 
-            <!-- Filtro de dificultad con Spinner -->
+            <!-- Filtro -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Filtrar por dificultad:"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
-                android:fontFamily="@font/baloo_2"
+                android:fontFamily="@font/merriweather"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Spinner moderno -->
             <Spinner
                 android:id="@+id/filterSpinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/spinner_background"
-                android:padding="12dp" />
+                android:layout_height="50dp"
+                android:background="@drawable/spinner_modern"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_marginBottom="24dp" />
 
-            <!-- Contenedor dinámico de misiones -->
+            <!-- Contenedor de misiones -->
             <LinearLayout
                 android:id="@+id/missionsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:divider="@drawable/divider_large"
+                android:showDividers="middle"
                 android:layout_marginBottom="24dp" />
 
-            <!-- Botón aceptar misiones -->
+            <!-- Botón principal -->
             <Button
                 android:id="@+id/btnAcceptMissions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Aceptar misiones"
-                android:backgroundTint="#004aad"
                 android:textColor="#FFFFFF"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:textSize="18sp"
-                android:fontFamily="@font/merriweather"
-                android:layout_marginTop="8dp" />
+                android:background="@drawable/button_primary"
+                android:paddingLeft="42dp"
+                android:paddingRight="42dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textSize="23sp"
+                android:fontFamily="@font/baloo_2"
+                android:elevation="8dp"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
     </ScrollView>

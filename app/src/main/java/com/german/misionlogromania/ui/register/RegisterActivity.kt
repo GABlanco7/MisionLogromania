@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.german.misionlogromania.R
 import com.german.misionlogromania.ui.contract.ContratoActivity
@@ -109,12 +110,22 @@ class RegisterActivity : AppCompatActivity() {
                     .putString("user_id", userId)
                     .apply()
 
+                // Mostrar toast de cuenta creada
                 Toast.makeText(this, "✅ Cuenta creada correctamente", Toast.LENGTH_LONG).show()
                 Toast.makeText(this, "Tu código familiar es: $familyCode", Toast.LENGTH_LONG).show()
 
-                // Ir al contrato directamente
-                startActivity(Intent(this, ContratoActivity::class.java))
-                finish()
+                // 🔹 Mostrar modal informativo sobre participación del niño
+                AlertDialog.Builder(this)
+                    .setTitle("Sugerencia")
+                    .setMessage("Se recomienda que el niño esté presente durante la configuración inicial de la aplicación para que se sienta involucrado.")
+                    .setPositiveButton("Aceptar") { dialog, _ ->
+                        dialog.dismiss()
+                        // Ir al contrato solo después de aceptar el modal
+                        startActivity(Intent(this, ContratoActivity::class.java))
+                        finish()
+                    }
+                    .setCancelable(false)
+                    .show()
             }
             .addOnFailureListener { e ->
                 Log.e("RegisterActivity", "Error al guardar en Firestore", e)
@@ -124,9 +135,15 @@ class RegisterActivity : AppCompatActivity() {
 
     // 🔹 Generador de código familiar
     private fun generateFamilyCode(): String {
-        val allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        val part1 = (1..4).map { allowed.random() }.joinToString("")
-        val part2 = (1..6).map { allowed.random() }.joinToString("")
-        return "$part1-$part2"
+        val digits = ('0'..'9').toMutableList()
+
+        // Evitar que el primer dígito sea 0
+        val firstDigit = ('1'..'9').random()
+        digits.remove(firstDigit)
+
+        // Elegir los 5 dígitos restantes sin repetir
+        val otherDigits = digits.shuffled().take(5)
+
+        return firstDigit + otherDigits.joinToString("")
     }
 }

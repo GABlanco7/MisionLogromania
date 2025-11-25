@@ -19,6 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        // 🔹 Necesario para pruebas instrumentadas
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -55,10 +56,11 @@ dependencies {
     // 🔹 Firebase (BoM: controla las versiones automáticamente)
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
 
-    // Productos Firebase que realmente usas:
+    // Productos Firebase usados
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-messaging:23.2.1")
 
     // 🔹 AndroidX UI y utilidades
     implementation("androidx.recyclerview:recyclerview:1.3.2")
@@ -84,12 +86,18 @@ dependencies {
     // 🔹 Navegación Compose
     implementation("androidx.navigation:navigation-compose:2.8.3")
 
-    // 🔹 Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // 🧪 🔹 Dependencias para pruebas
+
+    // --- Pruebas locales (unitarias) ---
+    testImplementation("junit:junit:4.13.2")
+
+    // --- Pruebas instrumentadas (en emulador/dispositivo) ---
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+
+    // --- Pruebas con Compose (si algún día las usas) ---
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-
-    implementation("com.google.firebase:firebase-messaging:23.2.1")
 }

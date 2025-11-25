@@ -15,6 +15,7 @@ import com.german.misionlogromania.ui.menu.PadreMenuActivity
 import com.german.misionlogromania.ui.select.SelectMissionsActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import android.graphics.Color
 
 class ConfirmMissionsActivity : AppCompatActivity() {
 
@@ -89,10 +90,12 @@ class ConfirmMissionsActivity : AppCompatActivity() {
                 text = "🎯 ${mission.title}\n${mission.description}"
                 textSize = 16f
                 setPadding(16, 8, 16, 8)
+                setTextColor(Color.parseColor("#000000"))   // 👈 AGREGADO
             }
             missionsLayout.addView(tv)
         }
     }
+
 
     /** 🏆 Cargar recompensas desde Firestore agrupadas por nivel */
     private fun loadRewards() {
@@ -158,7 +161,9 @@ class ConfirmMissionsActivity : AppCompatActivity() {
                             textSize = 16f
                             setPadding(32, 8, 16, 8)
                             setLineSpacing(4f, 1f)
+                            setTextColor(Color.parseColor("#000000"))  // 👈 AGREGADO
                         }
+
                         rewardsLayout.addView(tv)
                     }
                 }

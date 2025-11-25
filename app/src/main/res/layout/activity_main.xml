@@ -137,12 +137,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="¡Bienvenidos a la aventura\nde crecer logrando!"
-                android:textColor="#000000"
+                android:textColor="#FFFFFF"
                 android:textSize="23sp"
                 android:gravity="center"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="40dp"
-                android:fontFamily="@font/poppins" />
+                android:fontFamily="@font/merriweather"/>
 
             <FrameLayout
                 android:id="@+id/flStartButton"
@@ -163,12 +163,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:fontFamily="@font/merriweather"
+                    android:fontFamily="@font/baloo_2"
                     android:gravity="center"
                     android:text="Comenzar"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:textStyle="bold" />
             </FrameLayout>
         </LinearLayout>
