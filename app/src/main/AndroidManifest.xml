@@ -46,19 +46,19 @@
 
         <!-- Pantalla del Padre -->
         <activity
-            android:name=".ui.menu.PadreMenuActivity"
+            android:name=".ui.parent.ParentMenuActivity"
             android:exported="false"
             android:label="Panel del Padre"
-            android:parentActivityName=".ui.login.LoginActivity"
+            android:parentActivityName=".ui.parent.ParentLoginActivity"
             android:theme="@style/Theme.MisiónLogromanía">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.login.LoginActivity" />
+                android:value=".ui.parent.ParentLoginActivity" />
         </activity>
 
         <!-- Pantalla de selección de roles -->
         <activity
-            android:name=".ui.roles.RoleSelectionActivity"
+            android:name=".ui.auth.RoleSelectionActivity"
             android:exported="true"
             android:label="Seleccionar Rol"
             android:parentActivityName=".ui.MainActivity"
@@ -70,83 +70,83 @@
 
         <!-- Login del niño -->
         <activity
-            android:name=".ui.login.ChildLoginActivity"
+            android:name=".ui.child.ChildLoginActivity"
             android:exported="true"
             android:label="Login Niño"
-            android:parentActivityName=".ui.roles.RoleSelectionActivity"
+            android:parentActivityName=".ui.auth.RoleSelectionActivity"
             android:theme="@style/Theme.MisiónLogromanía">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.roles.RoleSelectionActivity" />
+                android:value=".ui.auth.RoleSelectionActivity" />
         </activity>
 
         <!-- Login del padre -->
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.parent.ParentLoginActivity"
             android:exported="true"
             android:label="Login Padre"
-            android:parentActivityName=".ui.roles.RoleSelectionActivity"
+            android:parentActivityName=".ui.auth.RoleSelectionActivity"
             android:theme="@style/Theme.MisiónLogromanía">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.roles.RoleSelectionActivity" />
+                android:value=".ui.auth.RoleSelectionActivity" />
         </activity>
 
         <!-- Registro de padres -->
         <activity
-            android:name=".ui.register.RegisterActivity"
+            android:name=".ui.parent.ParentRegisterActivity"
             android:exported="false"
             android:label="Registro"
-            android:parentActivityName=".ui.login.LoginActivity"
+            android:parentActivityName=".ui.parent.ParentLoginActivity"
             android:theme="@style/Theme.MisiónLogromanía">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.login.LoginActivity" />
+                android:value=".ui.parent.ParentLoginActivity" />
         </activity>
 
         <!-- Contrato -->
         <activity
-            android:name=".ui.contract.ContratoActivity"
+            android:name=".ui.parent.ContratoActivity"
             android:exported="false"
             android:label="Contrato"
             android:theme="@style/Theme.MisiónLogromanía" />
 
         <!-- Crear perfil del niño -->
         <activity
-            android:name=".ui.profile.CreateChildProfileActivity"
+            android:name=".ui.parent.CreateChildProfileActivity"
             android:exported="false"
             android:label="Crear Perfil"
             android:theme="@style/Theme.MisiónLogromanía" />
 
         <!-- Selección de misiones -->
         <activity
-            android:name=".ui.select.SelectMissionsActivity"
+            android:name=".ui.parent.SelectMissionsActivity"
             android:exported="true"
             android:label="Seleccionar Misiones"
             android:theme="@style/Theme.MisiónLogromanía" />
 
         <!-- Confirmación de misiones -->
         <activity
-            android:name=".ui.confirm.ConfirmMissionsActivity"
+            android:name=".ui.parent.ConfirmMissionsActivity"
             android:exported="true"
             android:label="Confirmar Misiones"
             android:theme="@style/Theme.MisiónLogromanía" />
 
         <!-- ✅ Recuperar contraseña CON PARENT -->
         <activity
-            android:name=".ui.login.RecoverPasswordActivity"
+            android:name=".ui.parent.RecoverPasswordActivity"
             android:exported="false"
             android:label="Recuperar Contraseña"
-            android:parentActivityName=".ui.login.LoginActivity"
+            android:parentActivityName=".ui.parent.ParentLoginActivity"
             android:theme="@style/Theme.MisiónLogromanía">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.login.LoginActivity" />
+                android:value=".ui.parent.ParentLoginActivity" />
         </activity>
 
         <!-- Menú del niño -->
         <activity
-            android:name=".ui.menu.KidHomeActivity"
+            android:name=".ui.child.KidHomeActivity"
             android:exported="true"
             android:label="Menú del Niño"
             android:theme="@style/Theme.MisiónLogromanía" />
@@ -177,10 +177,10 @@
             android:exported="true"
             android:label="Recompensas"
             android:theme="@style/Theme.MisiónLogromanía"
-            android:parentActivityName=".ui.menu.KidHomeActivity">
+            android:parentActivityName=".ui.child.KidHomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.menu.KidHomeActivity" />
+                android:value=".ui.child.KidHomeActivity" />
         </activity>
 
 

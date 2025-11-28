@@ -9,7 +9,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.german.misionlogromania.R
-import com.german.misionlogromania.ui.menu.PadreMenuActivity
+import com.german.misionlogromania.ui.parent.ParentMenuActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -57,7 +57,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * Muestra una notificación local en el dispositivo
      */
     private fun sendNotification(title: String?, body: String?) {
-        val intent = Intent(this, PadreMenuActivity::class.java).apply {
+        val intent = Intent(this, ParentMenuActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
 

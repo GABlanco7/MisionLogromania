@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.german.misionlogromania.R
+import com.german.misionlogromania.ui.calendar.DayAdapter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -168,9 +169,14 @@ class MissionBoardActivity : AppCompatActivity() {
             // Solo permite acciones si NO es modo solo lectura
             if (!isReadOnlyMode) {
                 if (day.isToday) showConfirmationDialog(day)
-                else Toast.makeText(this, "Solo puedes confirmar el día actual", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this, "Solo puedes confirmar el día actual", Toast.LENGTH_SHORT)
+                    .show()
             } else {
-                Toast.makeText(this, "👁️ Vista de solo lectura. No puedes editar.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "👁️ Vista de solo lectura. No puedes editar.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         rvDays.adapter = adapter

@@ -1,19 +1,17 @@
 package com.german.misionlogromania.ui
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.german.misionlogromania.R
 import com.german.misionlogromania.databinding.ActivityMainBinding
-import com.german.misionlogromania.ui.menu.KidHomeActivity
-import com.german.misionlogromania.ui.menu.PadreMenuActivity
-import com.german.misionlogromania.ui.roles.RoleSelectionActivity
+import com.german.misionlogromania.ui.child.KidHomeActivity
+import com.german.misionlogromania.ui.parent.ParentMenuActivity
+import com.german.misionlogromania.ui.auth.RoleSelectionActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -28,8 +26,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         createNotificationChannelIfNeeded()
-
-        requestNotificationPermission()
 
         binding.btnStart.setOnClickListener {
             checkSavedSession()
@@ -65,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
             // 👨‍👧 Padre con sesión guardada Y FirebaseAuth activo
             isParentLogged && authUser != null -> {
-                val intent = Intent(this, PadreMenuActivity::class.java)
+                val intent = Intent(this, ParentMenuActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
@@ -99,16 +95,6 @@ class MainActivity : AppCompatActivity() {
             val notificationManager: NotificationManager =
                 getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
-        }
-    }
-
-    /** ✅ Pedir permiso de notificación (Android 13+) */
-    private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permission = Manifest.permission.POST_NOTIFICATIONS
-            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(permission), 101)
-            }
         }
     }
 }
